@@ -1,0 +1,46 @@
+name: Daily scrape
+
+on:
+  schedule:
+    - cron: "17 12 * * *"   # 12:17 UTC = 6:17 AM Central
+  workflow_dispatch:         # adds a "Run workflow" button for manual runs
+
+permissions:
+  contents: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Scrape Community Property Management
+        run: >
+          python -m src.scrapers.appfolio
+          --base-url https://campuspm.appfolio.com
+          --manager "Community Property Management"
+
+      - name: Save results to the data branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          OUT="$RUNNER_TEMP/scrape"
+          mkdir -p "$OUT" && cp -r data raw "$OUT/"
+          if git fetch -q origin data:data 2>/dev/null; then
+            git checkout -q data
+          else
+            git checkout -q --orphan data
+            git rm -rq --cached .
+          fi
+          git clean -fdxq
+          cp -r "$OUT/data" "$OUT/raw" .
+          git add data raw
+          git commit -qm "Daily scrape $(date -u +%F)" || echo "Nothing new to save"
+          git push -q origin data
