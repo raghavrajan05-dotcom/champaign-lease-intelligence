@@ -22,10 +22,15 @@ jobs:
         run: pip install requests beautifulsoup4
 
       - name: Scrape Community Property Management
+        continue-on-error: true
         run: >
           python -m src.scrapers.appfolio
           --base-url https://campuspm.appfolio.com
           --manager "Community Property Management"
+
+      - name: Scrape Green Street Realty
+        continue-on-error: true
+        run: python -m src.scrapers.greenstreet
 
       - name: Save results to the data branch
         run: |
@@ -44,3 +49,4 @@ jobs:
           git add data raw
           git commit -qm "Daily scrape $(date -u +%F)" || echo "Nothing new to save"
           git push -q origin data
+          
