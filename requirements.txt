@@ -2,3 +2,5 @@ requests
 beautifulsoup4
 pytest
 psycopg[binary]
+streamlit
+pandas
