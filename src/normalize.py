@@ -42,10 +42,30 @@ def from_greenstreet(df: pd.DataFrame) -> pd.DataFrame:
     return out[COLUMNS]
 
 
+def from_jsm(df: pd.DataFrame) -> pd.DataFrame:
+    """JSM rows are unit types. Use JSM's per-person price when listed;
+    otherwise split the unit price evenly by bed (studios count as 1 bed)."""
+    beds_for_split = df["beds"].clip(lower=1)
+    lo = df["rent_person_min"].fillna((df["rent_unit_min"] / beds_for_split).round(0))
+    hi = df["rent_person_max"].fillna((df["rent_unit_max"] / beds_for_split).round(0))
+    out = pd.DataFrame({
+        "manager": df["manager"],
+        "name": df["name"],
+        "rent_per_bed_min": lo,
+        "rent_per_bed_max": hi,
+        "beds_min": df["beds"],
+        "beds_max": df["beds"],
+        "available": df["terms"],
+        "url": df["url"],
+        "scraped_on": df["scraped_on"],
+    })
+    return out[COLUMNS]
+
 
 SOURCES = {
     "community-property-management": from_appfolio,
     "green-street-realty": from_greenstreet,
+    "jsm-living": from_jsm,
 }
 
 

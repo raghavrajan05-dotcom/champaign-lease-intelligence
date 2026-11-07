@@ -27,18 +27,45 @@ CITY_RE = re.compile(r",\s*(Champaign|Urbana|Savoy)\b", re.I)
 
 
 def clean_address(name: str) -> str:
-    """'306-410 E. Michigan' -> '306 E Michigan'"""
-    s = name.replace(".", "")
+    """'306-410 E. Michigan' -> '306 E Michigan'; '601 S. Sixth - Campus Center' -> '601 S Sixth'"""
+    s = re.split(r"\s+[-–]\s+|\s*\(", name)[0]  # drop " - Building Name" or "(...)"
+    s = s.replace(".", "")
     s = re.sub(r"^(\d+)\s*-\s*\d+", r"\1", s.strip())  # building ranges: keep first number
     return re.sub(r"\s+", " ", s)
+
+
+ORDINALS = {"first": "1st", "second": "2nd", "third": "3rd",
+            "fourth": "4th", "fifth": "5th", "sixth": "6th"}
+ORDINAL_RE = re.compile(r"\b(" + "|".join(ORDINALS) + r")\b", re.I)
+SUFFIX_RE = re.compile(
+    r"\b(st|street|ave|avenue|dr|drive|rd|road|blvd|ct|court|pl|place|ln|lane|way|cir|pkwy)\b",
+    re.I)
+
+
+def street_variants(s: str) -> list[str]:
+    """'601 S Sixth' -> ['601 S Sixth', '601 S 6th', '601 S Sixth St', '601 S 6th St']
+
+    Some managers write addresses without a street type ("105 E Green"),
+    which the Census geocoder often can't match, so we also try adding "St".
+    """
+    variants = [s]
+    numeric = ORDINAL_RE.sub(lambda m: ORDINALS[m.group(1).lower()], s)
+    if numeric != s:
+        variants.append(numeric)
+    for v in list(variants):
+        street, sep, rest = v.partition(",")
+        if not SUFFIX_RE.search(street):
+            variants.append(f"{street} St{sep}{rest}")
+    return variants
 
 
 def candidates(name: str) -> list[str]:
     """Addresses to try, in order. Names without a city try Champaign, then Urbana."""
     s = clean_address(name)
+    variants = street_variants(s)
     if CITY_RE.search(s):
-        return [s]
-    return [f"{s}, Champaign, IL", f"{s}, Urbana, IL"]
+        return variants
+    return [f"{v}, {city}, IL" for city in ("Champaign", "Urbana") for v in variants]
 
 
 def census_lookup(address: str, session: requests.Session) -> tuple[float, float, str] | None:
@@ -83,8 +110,10 @@ def main() -> None:
 
     names = load_all()["name"].dropna().unique()
     cache = load_cache()
-    todo = [n for n in names if n not in set(cache["name"])]
-    print(f"{len(names)} addresses, {len(todo)} not looked up yet")
+    found = set(cache.dropna(subset=["lat"])["name"])
+    todo = [n for n in names if n not in found]  # new addresses + earlier misses
+    cache = cache[cache["name"].isin(found)]      # drop old misses; they're retried below
+    print(f"{len(names)} addresses, {len(todo)} to look up (new or previously unmatched)")
 
     session = requests.Session()
     new_rows = []
