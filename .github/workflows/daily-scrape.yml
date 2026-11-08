@@ -19,7 +19,13 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install requests beautifulsoup4
+        run: pip install requests beautifulsoup4 pandas
+
+      - name: Restore earlier scrapes (so quality checks can compare to yesterday)
+        run: |
+          if git fetch -q origin data 2>/dev/null; then
+            git archive origin/data data | tar -x
+          fi
 
       - name: Scrape Community Property Management
         continue-on-error: true
@@ -36,6 +42,11 @@ jobs:
         continue-on-error: true
         run: python -m src.scrapers.jsm
 
+      - name: Data quality checks
+        id: quality
+        continue-on-error: true    # still save the data, then flag the run below
+        run: python -m src.quality
+
       - name: Save results to the data branch
         run: |
           git config user.name "github-actions[bot]"
@@ -49,4 +60,13 @@ jobs:
             git rm -rq --cached .
           fi
           git clean -fdxq
-          cp -r "$OUT/data"
+          cp -r "$OUT/data" "$OUT/raw" .
+          git add data raw
+          git commit -qm "Daily scrape $(date -u +%F)" || echo "Nothing new to save"
+          git push -q origin data
+
+      - name: Flag failed quality checks
+        if: steps.quality.outcome == 'failure'
+        run: |
+          echo "Data quality checks failed. See the 'Data quality' table in this run's summary."
+          exit 1
