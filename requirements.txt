@@ -4,3 +4,4 @@ pytest
 psycopg[binary]
 streamlit
 pandas
+duckdb

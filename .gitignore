@@ -10,3 +10,5 @@ raw/
 .DS_Store
 .vscode/
 .idea/
+exports/
+warehouse/
