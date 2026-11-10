@@ -1,0 +1,46 @@
+manager,external_id,scraped_on,name,beds,baths,rent_unit_min,rent_unit_max,rent_person_min,rent_person_max,terms,url
+JSM Living,/node/130295?bedrooms=3&unittype=601S-3-2-B,2026-11-07,601 S. Sixth - Campus Center,3,2.0,2415.0,2955.0,805.0,985.0,Fall 2026; Spring 2027,https://jsmliving.com/node/130295?bedrooms=3&unittype=601S-3-2-B
+JSM Living,/node/130895?bedrooms=1&unittype=707S-1-1-A,2026-11-07,707 S. Sixth,1,1.0,1195.0,1525.0,,,Fall 2026; Fall 2027; Spring 2027,https://jsmliving.com/node/130895?bedrooms=1&unittype=707S-1-1-A
+JSM Living,/node/131010?bedrooms=1&unittype=902L-1-1-A,2026-11-07,902 S. Lincoln,1,1.0,1270.0,1555.0,,,Fall 2026; Spring 2027,https://jsmliving.com/node/131010?bedrooms=1&unittype=902L-1-1-A
+JSM Living,/node/129315?bedrooms=2&unittype=102G-2-1-A2,2026-11-07,102 E. Gregory,2,1.0,1790.0,1960.0,895.0,980.0,Fall 2027,https://jsmliving.com/node/129315?bedrooms=2&unittype=102G-2-1-A2
+JSM Living,/node/129400?bedrooms=0&unittype=105G-0-1-A,2026-11-07,105 E. Green,0,1.0,1195.0,1195.0,,,Fall 2027,https://jsmliving.com/node/129400?bedrooms=0&unittype=105G-0-1-A
+JSM Living,/node/129491?bedrooms=1&unittype=110G-1-1-A,2026-11-07,110 S. Gregory,1,1.0,865.0,960.0,,,Fall 2027,https://jsmliving.com/node/129491?bedrooms=1&unittype=110G-1-1-A
+JSM Living,/node/129522?bedrooms=1&unittype=201W-1-1-A,2026-11-07,201 S. Wright,1,1.0,1360.0,1475.0,,,Fall 2027,https://jsmliving.com/node/129522?bedrooms=1&unittype=201W-1-1-A
+JSM Living,/node/129559?bedrooms=1&unittype=203S-1-1-UPGRADED,2026-11-07,203 E. Stoughton,1,1.0,1144.0,1144.0,,,Fall 2027,https://jsmliving.com/node/129559?bedrooms=1&unittype=203S-1-1-UPGRADED
+JSM Living,/node/129588?bedrooms=4&unittype=301W-4-2-FP3,2026-11-07,301 S. Water,4,2.0,2636.0,3150.0,659.0,787.5,Fall 2027,https://jsmliving.com/node/129588?bedrooms=4&unittype=301W-4-2-FP3
+JSM Living,/node/129649?bedrooms=0&unittype=307A-0-1-CORNER,2026-11-07,307 E. Armory,0,1.0,795.0,810.0,,,Fall 2027,https://jsmliving.com/node/129649?bedrooms=0&unittype=307A-0-1-CORNER
+JSM Living,/node/129751?bedrooms=0&unittype=401C-0-1-CORNER,2026-11-07,401 E. Chalmers,0,1.0,870.0,890.0,,,Fall 2027,https://jsmliving.com/node/129751?bedrooms=0&unittype=401C-0-1-CORNER
+JSM Living,/node/129954?bedrooms=1&unittype=406C-1-1-STANDARD,2026-11-07,406 E. Clark,1,1.0,1005.0,1005.0,,,Fall 2027,https://jsmliving.com/node/129954?bedrooms=1&unittype=406C-1-1-STANDARD
+JSM Living,/node/129981?bedrooms=0&unittype=408S-0-1-C,2026-11-07,408 E. Stoughton,0,1.0,995.0,1065.0,,,Fall 2027,https://jsmliving.com/node/129981?bedrooms=0&unittype=408S-0-1-C
+JSM Living,/node/129981?bedrooms=1&unittype=408S-1-1-A,2026-11-07,408 E. Stoughton,1,1.0,1205.0,1325.0,,,Fall 2027,https://jsmliving.com/node/129981?bedrooms=1&unittype=408S-1-1-A
+JSM Living,/node/130020?bedrooms=1&unittype=408W-1-1-A,2026-11-07,408 E. White,1,1.0,1295.0,1325.0,,,Fall 2027,https://jsmliving.com/node/130020?bedrooms=1&unittype=408W-1-1-A
+JSM Living,/node/130086?bedrooms=0&unittype=502W-0-1-CORNER,2026-11-07,502 E. White,0,1.0,1170.0,1170.0,,,Fall 2027,https://jsmliving.com/node/130086?bedrooms=0&unittype=502W-0-1-CORNER
+JSM Living,/index.php/node/130115?bedrooms=0&unittype=505C-0-1-SUITE-A,2026-11-07,505 E. Clark,0,1.0,1075.0,1090.0,,,Fall 2027,https://jsmliving.com/index.php/node/130115?bedrooms=0&unittype=505C-0-1-SUITE-A
+JSM Living,/node/243607?bedrooms=0&unittype=505F-0-1-S1,2026-11-07,505 S. Fifth - The Station,0,1.0,1800.0,1800.0,,,Fall 2027,https://jsmliving.com/node/243607?bedrooms=0&unittype=505F-0-1-S1
+JSM Living,/node/243607?bedrooms=1&unittype=505F-1-1-A2,2026-11-07,505 S. Fifth - The Station,1,1.0,1200.0,2030.0,,,Fall 2027,https://jsmliving.com/node/243607?bedrooms=1&unittype=505F-1-1-A2
+JSM Living,/node/243607?bedrooms=4&unittype=505F-4-4-D1,2026-11-07,505 S. Fifth - The Station,4,4.0,4400.0,4400.0,1100.0,1100.0,Fall 2027,https://jsmliving.com/node/243607?bedrooms=4&unittype=505F-4-4-D1
+JSM Living,/node/243170?bedrooms=1&unittype=507G-1-1-A,2026-11-07,507 E. Green - The Summit,1,1.0,1745.0,1935.0,,,Fall 2027,https://jsmliving.com/node/243170?bedrooms=1&unittype=507G-1-1-A
+JSM Living,/node/130211?bedrooms=4&unittype=508J-4-2-STANDARD,2026-11-07,508 E. John,4,2.0,3600.0,3600.0,900.0,900.0,Fall 2027,https://jsmliving.com/node/130211?bedrooms=4&unittype=508J-4-2-STANDARD
+JSM Living,/node/130402?bedrooms=1&unittype=601W-1-1-A,2026-11-07,601 E. White,1,1.0,1215.0,1235.0,,,Fall 2027,https://jsmliving.com/node/130402?bedrooms=1&unittype=601W-1-1-A
+JSM Living,/node/130295?bedrooms=1&unittype=601S-1-1-B,2026-11-07,601 S. Sixth - Campus Center,1,1.0,1555.0,1710.0,,,Fall 2027,https://jsmliving.com/node/130295?bedrooms=1&unittype=601S-1-1-B
+JSM Living,/node/130295?bedrooms=2&unittype=601S-2-1-C,2026-11-07,601 S. Sixth - Campus Center,2,1.0,1940.0,2260.0,970.0,1130.0,Fall 2027,https://jsmliving.com/node/130295?bedrooms=2&unittype=601S-2-1-C
+JSM Living,/index.php/node/130432?bedrooms=0&unittype=602C-0-1-FP-1,2026-11-07,602 E. Clark,0,1.0,930.0,1060.0,,,Fall 2027,https://jsmliving.com/index.php/node/130432?bedrooms=0&unittype=602C-0-1-FP-1
+JSM Living,/node/130466?bedrooms=1&unittype=603W-1-1-A,2026-11-07,603 E. White,1,1.0,1215.0,1235.0,,,Fall 2027,https://jsmliving.com/node/130466?bedrooms=1&unittype=603W-1-1-A
+JSM Living,/node/130504?bedrooms=1&unittype=605W-1-1-A,2026-11-07,605 E. White,1,1.0,1215.0,1235.0,,,Fall 2027,https://jsmliving.com/node/130504?bedrooms=1&unittype=605W-1-1-A
+JSM Living,/node/130538?bedrooms=1&unittype=607W-1-1-A,2026-11-07,607 E. White,1,1.0,1215.0,1235.0,,,Fall 2027,https://jsmliving.com/node/130538?bedrooms=1&unittype=607W-1-1-A
+JSM Living,/node/130561?bedrooms=4&unittype=608G2-4-2-STANDARD,2026-11-07,608 E. Green,4,2.0,3060.0,3060.0,765.0,765.0,Fall 2027,https://jsmliving.com/node/130561?bedrooms=4&unittype=608G2-4-2-STANDARD
+JSM Living,/node/130642?bedrooms=1&unittype=700G-1-1-LUXURY,2026-11-07,700 S. Gregory,1,1.0,1250.0,1535.0,,,Fall 2027,https://jsmliving.com/node/130642?bedrooms=1&unittype=700G-1-1-LUXURY
+JSM Living,/node/130642?bedrooms=2&unittype=700G-2-1-STANDARD,2026-11-07,700 S. Gregory,2,1.0,1830.0,1830.0,915.0,915.0,Fall 2027,https://jsmliving.com/node/130642?bedrooms=2&unittype=700G-2-1-STANDARD
+JSM Living,/node/130789?bedrooms=1&unittype=701G-1-1-LUXURY--B,2026-11-07,701 S. Gregory,1,1.0,1240.0,1465.0,,,Fall 2027,https://jsmliving.com/node/130789?bedrooms=1&unittype=701G-1-1-LUXURY--B
+JSM Living,/node/130789?bedrooms=2&unittype=701G-2-1-STANDARD,2026-11-07,701 S. Gregory,2,1.0,1750.0,1750.0,875.0,875.0,Fall 2027,https://jsmliving.com/node/130789?bedrooms=2&unittype=701G-2-1-STANDARD
+JSM Living,/node/131010?bedrooms=3&unittype=902L-3-2-A,2026-11-07,902 S. Lincoln,3,2.0,2625.0,2625.0,875.0,875.0,Fall 2027,https://jsmliving.com/node/131010?bedrooms=3&unittype=902L-3-2-A
+JSM Living,/node/250066?bedrooms=0&unittype=1105O-0-1-STANDARD,2026-11-07,1105 W. Oregon,0,1.0,1140.0,1140.0,,,Fall 2027,https://jsmliving.com/node/250066?bedrooms=0&unittype=1105O-0-1-STANDARD
+JSM Living,/node/250066?bedrooms=1&unittype=1105O-1-1-STANDARD,2026-11-07,1105 W. Oregon,1,1.0,1220.0,1220.0,,,Fall 2027,https://jsmliving.com/node/250066?bedrooms=1&unittype=1105O-1-1-STANDARD
+JSM Living,/node/250066?bedrooms=2&unittype=1105O-2-1-STANDARD,2026-11-07,1105 W. Oregon,2,1.0,1340.0,1340.0,670.0,670.0,Fall 2027,https://jsmliving.com/node/250066?bedrooms=2&unittype=1105O-2-1-STANDARD
+JSM Living,/node/250071?bedrooms=0&unittype=1107O-0-1-STANDARD,2026-11-07,1107 W. Oregon,0,1.0,1140.0,1140.0,,,Fall 2027,https://jsmliving.com/node/250071?bedrooms=0&unittype=1107O-0-1-STANDARD
+JSM Living,/node/250071?bedrooms=1&unittype=1107O-1-1-STANDARD,2026-11-07,1107 W. Oregon,1,1.0,1220.0,1220.0,,,Fall 2027,https://jsmliving.com/node/250071?bedrooms=1&unittype=1107O-1-1-STANDARD
+JSM Living,/node/250071?bedrooms=2&unittype=1107O-2-1-STANDARD,2026-11-07,1107 W. Oregon,2,1.0,1340.0,1340.0,670.0,670.0,Fall 2027,https://jsmliving.com/node/250071?bedrooms=2&unittype=1107O-2-1-STANDARD
+JSM Living,/node/250075?bedrooms=0&unittype=1108N-0-1-STANDARD,2026-11-07,1108 W. Nevada,0,1.0,975.0,975.0,,,Fall 2027,https://jsmliving.com/node/250075?bedrooms=0&unittype=1108N-0-1-STANDARD
+JSM Living,/node/250075?bedrooms=1&unittype=1108N-1-1-STANDARD,2026-11-07,1108 W. Nevada,1,1.0,1015.0,1015.0,,,Fall 2027,https://jsmliving.com/node/250075?bedrooms=1&unittype=1108N-1-1-STANDARD
+JSM Living,/node/250075?bedrooms=2&unittype=1108N-2-1-STANDARD,2026-11-07,1108 W. Nevada,2,1.0,1100.0,1100.0,550.0,550.0,Fall 2027,https://jsmliving.com/node/250075?bedrooms=2&unittype=1108N-2-1-STANDARD
+JSM Living,/node/250075?bedrooms=3&unittype=1108N-3-1-STANDARD,2026-11-07,1108 W. Nevada,3,1.0,1440.0,1440.0,480.0,480.0,Fall 2027,https://jsmliving.com/node/250075?bedrooms=3&unittype=1108N-3-1-STANDARD
