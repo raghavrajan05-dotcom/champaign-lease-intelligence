@@ -95,6 +95,14 @@ def load_cache(path: Path = CACHE_PATH) -> pd.DataFrame:
     return pd.DataFrame(columns=CACHE_COLUMNS)
 
 
+def load_remote_cache(base: str) -> pd.DataFrame:
+    """The geocode cache the daily job keeps on the data branch (used by the hosted site)."""
+    try:
+        return pd.read_csv(f"{base}/reference/geocodes.csv")
+    except OSError:
+        return load_cache()  # fall back to the copy committed with the code
+
+
 def attach_distance(listings: pd.DataFrame, cache: pd.DataFrame) -> pd.DataFrame:
     """Add lat, lon and miles_to_quad columns by matching on the listing name."""
     out = listings.merge(cache[["name", "lat", "lon"]], on="name", how="left")

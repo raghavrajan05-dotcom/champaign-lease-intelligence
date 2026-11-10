@@ -21,10 +21,11 @@ jobs:
       - name: Install dependencies
         run: pip install requests beautifulsoup4 pandas
 
-      - name: Restore earlier scrapes (so quality checks can compare to yesterday)
+      - name: Restore earlier scrapes and the geocode cache
         run: |
           if git fetch -q origin data 2>/dev/null; then
             git archive origin/data data | tar -x
+            git archive origin/data reference 2>/dev/null | tar -x || true
           fi
 
       - name: Scrape Community Property Management
@@ -34,13 +35,17 @@ jobs:
           --base-url https://campuspm.appfolio.com
           --manager "Community Property Management"
 
-      - name: Scrape Green Street Realty
-        continue-on-error: true
-        run: python -m src.scrapers.greenstreet
+      # Green Street Realty is paused: its site returns 403 to GitHub's servers.
+      # Re-add its step (python -m src.scrapers.greenstreet) once they grant permission,
+      # and remove it from PAUSED in src/quality.py.
 
       - name: Scrape JSM Living
         continue-on-error: true
         run: python -m src.scrapers.jsm
+
+      - name: Geocode new addresses
+        continue-on-error: true
+        run: python -m src.geo.geocode
 
       - name: Data quality checks
         id: quality
@@ -48,11 +53,18 @@ jobs:
         run: python -m src.quality
 
       - name: Save results to the data branch
+        # Public: CSVs, newest file per manager (latest/), geocode cache.
+        # Raw HTML pages are NOT published.
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           OUT="$RUNNER_TEMP/scrape"
-          mkdir -p "$OUT" && cp -r data raw "$OUT/"
+          mkdir -p "$OUT/latest"
+          cp -r data reference "$OUT/"
+          for p in community-property-management green-street-realty jsm-living; do
+            f=$(ls data/${p}_*.csv 2>/dev/null | sort | tail -1)
+            if [ -n "$f" ]; then cp "$f" "$OUT/latest/$p.csv"; fi
+          done
           if git fetch -q origin data:data 2>/dev/null; then
             git checkout -q data
           else
@@ -60,8 +72,9 @@ jobs:
             git rm -rq --cached .
           fi
           git clean -fdxq
-          cp -r "$OUT/data" "$OUT/raw" .
-          git add data raw
+          git rm -rq --ignore-unmatch raw
+          cp -r "$OUT/data" "$OUT/reference" "$OUT/latest" .
+          git add data reference latest
           git commit -qm "Daily scrape $(date -u +%F)" || echo "Nothing new to save"
           git push -q origin data
 

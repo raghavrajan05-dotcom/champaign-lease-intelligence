@@ -6,15 +6,19 @@ import streamlit as st
 
 # Let the app import our own code from src/ (needed for `streamlit run` and for hosting).
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from src.geo.geocode import attach_distance, load_cache  # noqa: E402
-from src.normalize import load_all  # noqa: E402
+from src.geo.geocode import attach_distance, load_cache, load_remote_cache  # noqa: E402
+from src.normalize import REMOTE_BASE, load_all, load_latest_remote  # noqa: E402
 
 st.set_page_config(page_title="Champaign Lease Intelligence", layout="wide")
 
 
-@st.cache_data
+@st.cache_data(ttl=3600)  # re-read at most once an hour
 def get_listings() -> pd.DataFrame:
-    return attach_distance(load_all(), load_cache())
+    local = load_all()
+    if not local.empty:  # running on your laptop with data/ synced
+        return attach_distance(local, load_cache())
+    # hosted: no data/ folder, so read the public daily files from GitHub
+    return attach_distance(load_latest_remote(), load_remote_cache(REMOTE_BASE))
 
 
 df = get_listings()
@@ -24,6 +28,9 @@ st.title("Champaign Lease Intelligence")
 if df.empty:
     st.warning("No data yet. Run the scrapers or: bash scripts/sync_data.sh")
     st.stop()
+
+if "Green Street Realty" not in set(df["manager"]):
+    st.info("Green Street Realty listings will be added once they approve. We've asked for their permission.")
 
 updated = df.groupby("manager")["scraped_on"].max()
 st.caption("Last updated: " + " · ".join(f"{m} {d}" for m, d in updated.items()))

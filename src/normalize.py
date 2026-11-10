@@ -69,6 +69,23 @@ SOURCES = {
 }
 
 
+# Public copy of the daily data: the workflow writes the newest file per manager
+# to latest/<manager>.csv on the repo's "data" branch.
+REMOTE_BASE = ("https://raw.githubusercontent.com/"
+               "raghavrajan05-dotcom/champaign-lease-intelligence/data")
+
+
+def load_latest_remote(base: str = REMOTE_BASE) -> pd.DataFrame:
+    """Newest listings per manager, read over the internet (used by the hosted site)."""
+    frames = []
+    for prefix, normalize in SOURCES.items():
+        try:
+            frames.append(normalize(pd.read_csv(f"{base}/latest/{prefix}.csv")))
+        except OSError:  # 404 / network error: that manager has no public file yet
+            continue
+    return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame(columns=COLUMNS)
+
+
 def load_all(data_dir: str = "data") -> pd.DataFrame:
     """Newest CSV for each manager, converted to the common columns and stacked."""
     import glob
