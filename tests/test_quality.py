@@ -52,3 +52,14 @@ def test_missing_prices_and_duplicates_fail(tmp_path):
 
 def test_no_file_fails(tmp_path):
     assert results(tmp_path) == {"file exists": False}
+
+
+
+def test_paused_source_is_skipped_not_failed(tmp_path, monkeypatch):
+    from src import quality
+
+    monkeypatch.setattr(quality, "PAUSED", {"green-street-realty": "paused for test"})
+    results = quality.run(str(tmp_path))  # no Green Street file at all
+    gs = [c for c in results if c.manager == "green-street-realty"]
+    assert len(gs) == 1 and gs[0].skipped and gs[0].passed
+    assert "1 skipped" in quality.report(results)

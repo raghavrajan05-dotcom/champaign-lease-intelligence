@@ -23,6 +23,12 @@ MAX_COUNT_DROP = 0.5        # fail if listings fall by more than 50% vs the prev
 MAX_MISSING_PRICE = 0.25    # fail if more than 25% of rows have no per-bed price
 RENT_PER_BED_RANGE = (200, 3000)  # $/bed/month outside this is almost surely a parsing error
 
+# Sources deliberately not scraped right now, with the reason. They are reported
+# as SKIP instead of failing every run (an alert that always fires gets ignored).
+PAUSED = {
+    "green-street-realty": "paused: site returns 403 to GitHub; permission requested",
+}
+
 
 @dataclass
 class Check:
@@ -30,6 +36,7 @@ class Check:
     name: str
     passed: bool
     detail: str
+    skipped: bool = False
 
     def __post_init__(self):
         self.passed = bool(self.passed)  # pandas comparisons return numpy bools
@@ -95,6 +102,9 @@ def check_manager(prefix: str, normalize, data_dir: str = "data") -> list[Check]
 def run(data_dir: str = "data") -> list[Check]:
     results: list[Check] = []
     for prefix, normalize in SOURCES.items():
+        if prefix in PAUSED:
+            results.append(Check(prefix, "source active", True, PAUSED[prefix], skipped=True))
+            continue
         results.extend(check_manager(prefix, normalize, data_dir))
     return results
 
@@ -102,9 +112,11 @@ def run(data_dir: str = "data") -> list[Check]:
 def report(results: list[Check]) -> str:
     lines = ["| Manager | Check | Result | Detail |", "|---|---|---|---|"]
     for c in results:
-        lines.append(f"| {c.manager} | {c.name} | {'PASS' if c.passed else 'FAIL'} | {c.detail} |")
+        status = "SKIP" if c.skipped else ("PASS" if c.passed else "FAIL")
+        lines.append(f"| {c.manager} | {c.name} | {status} | {c.detail} |")
     failed = sum(not c.passed for c in results)
-    lines.append(f"\n**{len(results) - failed} passed, {failed} failed**")
+    skipped = sum(c.skipped for c in results)
+    lines.append(f"\n**{len(results) - failed - skipped} passed, {failed} failed, {skipped} skipped**")
     return "\n".join(lines)
 
 
