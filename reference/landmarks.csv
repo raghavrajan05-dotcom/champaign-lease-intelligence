@@ -1,0 +1,13 @@
+name,short,address,lat,lon,source
+Main Quad,the Quad,,40.1075,-88.2272,approximate center between the Illini Union and Foellinger
+Engineering Quad (Grainger Library),Grainger,"1301 W Springfield Ave, Urbana, IL 61801",40.112691,-88.2257,"Census geocoder: 1301 SPRINGFIELD AVE, URBANA, IL, 61801"
+Campustown (Green & Sixth),Green & 6th,"601 E Green St, Champaign, IL 61820",40.110232,-88.230314,"Census geocoder: 601 E GREEN ST, CHAMPAIGN, IL, 61820"
+ARC (gym),the ARC,"201 E Peabody Dr, Champaign, IL 61820",40.101313,-88.236018,Wikipedia
+CRCE (gym),CRCE,"1102 W Gregory Dr, Urbana, IL 61801",40.104248,-88.221631,"Census geocoder: 1102 W GREGORY DR, URBANA, IL, 61801"
+Gies Business (BIF),BIF,"515 E Gregory Dr, Champaign, IL 61820",40.1037028,-88.2309278,Wikipedia
+Main Library,Main Library,"1408 W Gregory Dr, Urbana, IL 61801",40.104216,-88.228887,"Census geocoder: 1408 W GREGORY DR, URBANA, IL, 61801"
+Siebel Center for CS,Siebel,"201 N Goodwin Ave, Urbana, IL 61801",40.113591,-88.224065,"Census geocoder: 201 N GOODWIN AVE, URBANA, IL, 61801"
+Krannert Center,Krannert,"500 S Goodwin Ave, Urbana, IL 61801",40.10802,-88.22275,Mapcarta (OpenStreetMap)
+Red Lion (bar),Red Lion,"211 E Green St, Champaign, IL 61820",40.110176,-88.236815,"Census geocoder: 211 E GREEN ST, CHAMPAIGN, IL, 61820"
+KAM's (bar),KAM's,"102 E Green St, Champaign, IL 61820",40.110275,-88.23859,"Census geocoder: 102 E GREEN ST, CHAMPAIGN, IL, 61820"
+Joe's Brewery (bar),Joe's,"706 S 5th St, Champaign, IL 61820",40.110161,-88.231978,"Census geocoder: 706 S 5TH ST, CHAMPAIGN, IL, 61820"
