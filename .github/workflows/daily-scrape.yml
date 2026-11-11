@@ -35,9 +35,9 @@ jobs:
           --base-url https://campuspm.appfolio.com
           --manager "Community Property Management"
 
-      # Green Street Realty is paused: its site returns 403 to GitHub's servers.
-      # Re-add its step (python -m src.scrapers.greenstreet) once they grant permission,
-      # and remove it from PAUSED in src/quality.py.
+      # Green Street Realty is scraped from Rod's laptop (scripts/scrape_greenstreet_local.sh),
+      # with their permission: their site returns 403 to GitHub's servers.
+      # This job keeps those files when it saves to the data branch.
 
       - name: Scrape JSM Living
         continue-on-error: true
@@ -66,7 +66,7 @@ jobs:
             if [ -n "$f" ]; then cp "$f" "$OUT/latest/$p.csv"; fi
           done
           if git fetch -q origin data:data 2>/dev/null; then
-            git checkout -q data
+            git checkout -q -f data
           else
             git checkout -q --orphan data
             git rm -rq --cached .
