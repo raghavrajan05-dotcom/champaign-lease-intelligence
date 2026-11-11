@@ -1,7 +1,7 @@
 """Turn each manager's scraper output into one common table for the site.
 
 Common columns:
-    manager, name, rent_per_bed_min, rent_per_bed_max, beds_min, beds_max,
+    manager, listing_id, name, rent_per_bed_min, rent_per_bed_max, beds_min, beds_max,
     available, url, scraped_on
 """
 
@@ -12,9 +12,15 @@ from pathlib import Path
 import pandas as pd
 
 COLUMNS = [
-    "manager", "name", "rent_per_bed_min", "rent_per_bed_max",
+    "manager", "listing_id", "name", "rent_per_bed_min", "rent_per_bed_max",
     "beds_min", "beds_max", "available", "url", "scraped_on",
 ]
+
+
+def _ids(df: pd.DataFrame, fallback: str) -> pd.Series:
+    """The manager's own listing ID (stable day to day); fallback column if a file lacks it."""
+    col = "external_id" if "external_id" in df else fallback
+    return df[col].astype(str)
 
 
 def from_appfolio(df: pd.DataFrame) -> pd.DataFrame:
@@ -26,6 +32,7 @@ def from_appfolio(df: pd.DataFrame) -> pd.DataFrame:
     per_bed = (df["rent"] / beds_for_split).round(0)
     out = pd.DataFrame({
         "manager": df["manager"],
+        "listing_id": _ids(df, "address"),
         "name": df["address"].fillna(df["title"]),
         "rent_per_bed_min": per_bed,
         "rent_per_bed_max": per_bed,
@@ -41,6 +48,7 @@ def from_appfolio(df: pd.DataFrame) -> pd.DataFrame:
 def from_greenstreet(df: pd.DataFrame) -> pd.DataFrame:
     """Green Street rows are buildings that already list per-bed price ranges."""
     out = df.rename(columns={"available_raw": "available"})
+    out["listing_id"] = _ids(out, "name")
     return out[COLUMNS]
 
 
@@ -52,6 +60,7 @@ def from_jsm(df: pd.DataFrame) -> pd.DataFrame:
     hi = df["rent_person_max"].fillna((df["rent_unit_max"] / beds_for_split).round(0))
     out = pd.DataFrame({
         "manager": df["manager"],
+        "listing_id": _ids(df, "name"),
         "name": df["name"],
         "rent_per_bed_min": lo,
         "rent_per_bed_max": hi,
@@ -68,6 +77,9 @@ SOURCES = {
     "community-property-management": from_appfolio,
     "green-street-realty": from_greenstreet,
     "jsm-living": from_jsm,
+    # More managers on AppFolio: same scraper, same columns (see the workflow).
+    "ramshaw-real-estate": from_appfolio,
+    "weiner-companies": from_appfolio,
 }
 
 # Buildings shown WITHOUT prices, e.g. when a manager doesn't allow price data:
@@ -83,6 +95,7 @@ def load_unpriced_buildings(path: Path = UNPRICED_PATH) -> pd.DataFrame:
     df = pd.read_csv(path)
     out = pd.DataFrame({
         "manager": df["manager"],
+        "listing_id": df["name"],
         "name": df["name"],
         "rent_per_bed_min": float("nan"),
         "rent_per_bed_max": float("nan"),
@@ -97,8 +110,9 @@ def load_unpriced_buildings(path: Path = UNPRICED_PATH) -> pd.DataFrame:
 
 # Public copy of the daily data: the workflow writes the newest file per manager
 # to latest/<manager>.csv on the repo's "data" branch.
-REMOTE_BASE = ("https://raw.githubusercontent.com/"
-               "raghavrajan05-dotcom/champaign-lease-intelligence/data")
+REPO = "raghavrajan05-dotcom/champaign-lease-intelligence"
+REMOTE_BASE = f"https://raw.githubusercontent.com/{REPO}/data"
+HISTORY_DAYS = 30  # how far back the site's trend charts look
 
 
 def load_latest_remote(base: str = REMOTE_BASE) -> pd.DataFrame:
@@ -122,3 +136,42 @@ def load_all(data_dir: str = "data") -> pd.DataFrame:
         if files:
             frames.append(normalize(pd.read_csv(files[-1])))
     return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame(columns=COLUMNS)
+
+
+def _stack(files_by_prefix: dict[str, list[str]], read) -> pd.DataFrame:
+    frames = []
+    for prefix, files in files_by_prefix.items():
+        normalize = SOURCES[prefix]
+        for f in sorted(files)[-HISTORY_DAYS:]:
+            try:
+                frames.append(normalize(read(f)))
+            except (OSError, KeyError):  # missing file or an old column layout
+                continue
+    return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame(columns=COLUMNS)
+
+
+def load_history(data_dir: str = "data") -> pd.DataFrame:
+    """Every daily scrape (last HISTORY_DAYS per manager), stacked: one row per listing per day."""
+    import glob
+
+    files = {p: glob.glob(f"{data_dir}/{p}_*.csv") for p in SOURCES}
+    return _stack(files, pd.read_csv)
+
+
+def load_history_remote(repo: str = REPO, base: str = REMOTE_BASE) -> pd.DataFrame:
+    """Same as load_history, read from the public data branch (used by the hosted site).
+
+    One GitHub API call lists the files; the CSVs themselves come from raw.githubusercontent.com.
+    """
+    import requests
+
+    try:
+        resp = requests.get(f"https://api.github.com/repos/{repo}/git/trees/data",
+                            params={"recursive": "1"}, timeout=20)
+        resp.raise_for_status()
+        paths = [t["path"] for t in resp.json().get("tree", [])]
+    except (requests.RequestException, ValueError):
+        return pd.DataFrame(columns=COLUMNS)
+    files = {p: [x for x in paths if x.startswith(f"data/{p}_") and x.endswith(".csv")]
+             for p in SOURCES}
+    return _stack(files, lambda path: pd.read_csv(f"{base}/{path}"))

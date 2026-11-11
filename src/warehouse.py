@@ -32,6 +32,8 @@ LISTING_TYPE = {
     "Green Street Realty": "Building (price range)",
     "JSM Living": "Unit type",
     "Community Property Management": "Single unit",
+    "Ramshaw Real Estate": "Single unit",
+    "Weiner Companies": "Single unit",
 }
 
 

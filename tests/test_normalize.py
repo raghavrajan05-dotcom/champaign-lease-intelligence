@@ -76,3 +76,18 @@ def test_unpriced_buildings_have_no_prices(tmp_path):
     assert list(out.columns) == COLUMNS
     assert out["rent_per_bed_min"].isna().all() and out["beds_min"].isna().all()
     assert out.loc[0, "url"] == "https://example.com/105"
+
+
+def test_load_history_stacks_every_day(tmp_path):
+    from src.normalize import load_history
+
+    for day, price in [("2026-11-09", 900), ("2026-11-10", 950)]:
+        pd.DataFrame({"manager": ["JSM Living"], "external_id": ["/node/1?unittype=A"],
+                      "scraped_on": [day], "name": ["105 E. Green"], "beds": [2], "baths": [1],
+                      "rent_unit_min": [None], "rent_unit_max": [None],
+                      "rent_person_min": [price], "rent_person_max": [price],
+                      "terms": ["Fall 2027"], "url": ["u"]}).to_csv(
+            tmp_path / f"jsm-living_{day}.csv", index=False)
+    h = load_history(str(tmp_path))
+    assert h["rent_per_bed_min"].tolist() == [900, 950]
+    assert h["listing_id"].nunique() == 1  # same listing both days

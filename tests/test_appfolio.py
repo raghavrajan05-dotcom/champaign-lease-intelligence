@@ -59,3 +59,13 @@ def test_parse_listings_keeps_listings_separate():
     assert a["available_date"] == "2027-01-15"
     assert b["rent"] == 1745.0 and b["available_date"] == "2026-10-22"
     assert b["address"] == "217 S Neil St, Champaign, IL 61820"
+
+
+def test_keep_cities_drops_other_towns():
+    from src.scrapers.appfolio import keep_cities
+
+    rows = [{"address": "511 E White, Champaign, IL 61820"},
+            {"address": "360 Olympic Ln, Decatur, IL 62526"},
+            {"address": None}]
+    assert keep_cities(rows, ["Champaign", "Urbana"]) == rows[:1]
+    assert keep_cities(rows, None) == rows

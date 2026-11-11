@@ -1,0 +1,10 @@
+[theme]
+base = "light"
+primaryColor = "#E84A27"            # Illinois orange
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F3F5F9"
+textColor = "#13294B"               # Illini blue
+font = "sans serif"
+
+[client]
+toolbarMode = "minimal"

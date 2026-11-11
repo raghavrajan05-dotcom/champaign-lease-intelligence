@@ -4,6 +4,8 @@ Usage:
     python -m src.scrapers.appfolio --base-url https://campuspm.appfolio.com \
         --manager "Community Property Management"
 
+Add --cities Champaign Urbana Savoy for managers that also list other towns.
+
 Writes one CSV per run to data/ and saves the raw HTML to raw/ (both gitignored).
 """
 
@@ -148,6 +150,14 @@ def parse_listings(html: str, base_url: str, manager: str, today: date) -> list[
     return rows
 
 
+def keep_cities(rows: list[dict], cities: list[str] | None) -> list[dict]:
+    """Keep listings whose address names one of the cities (all rows if no cities given)."""
+    if not cities:
+        return rows
+    pattern = re.compile(r",\s*(" + "|".join(map(re.escape, cities)) + r")\b", re.I)
+    return [r for r in rows if r["address"] and pattern.search(r["address"])]
+
+
 # ---------- run ----------
 
 def fetch(base_url: str) -> str:
@@ -164,6 +174,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--base-url", required=True)
     ap.add_argument("--manager", required=True)
+    ap.add_argument("--cities", nargs="*", help="only keep listings in these cities")
     args = ap.parse_args()
 
     today = date.today()
@@ -176,7 +187,7 @@ def main() -> None:
     digest = hashlib.sha256(html.encode()).hexdigest()[:12]
     (raw_dir / f"{slug}_{today}_{digest}.html").write_text(html)
 
-    rows = parse_listings(html, args.base_url, args.manager, today)
+    rows = keep_cities(parse_listings(html, args.base_url, args.manager, today), args.cities)
     out = data_dir / f"{slug}_{today}.csv"
     with out.open("w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=FIELDS)
