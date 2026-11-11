@@ -28,11 +28,7 @@ MAX_AGE_DAYS = 3            # fail if a manager's newest scrape is older than th
 
 # Sources deliberately not scraped right now, with the reason. They are reported
 # as SKIP instead of failing every run (an alert that always fires gets ignored).
-PAUSED: dict[str, str] = {
-    # Remove a line once the manager says yes AND its step is added to the workflow.
-    "ramshaw-real-estate": "waiting for permission",
-    "weiner-companies": "waiting for permission",
-}
+PAUSED: dict[str, str] = {}  # e.g. {"jsm-living": "paused: site down for maintenance"}
 
 
 @dataclass
