@@ -69,10 +69,10 @@ jobs:
         continue-on-error: true
         run: python -m src.scrapers.appfolio_feed
 
-      - name: Scrape Octave, Seven07 and The Rive
+      # Octave is paused (no response from GitHub's servers); see PAUSED in src/quality.py.
+      - name: Scrape Seven07 and The Rive
         continue-on-error: true
         run: |
-          python -m src.scrapers.floorplans octave || true
           python -m src.scrapers.floorplans seven07 || true
           python -m src.scrapers.floorplans the-rive || true
 

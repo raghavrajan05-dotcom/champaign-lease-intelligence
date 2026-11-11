@@ -33,7 +33,10 @@ MISSING_PRICE_OK: dict[str, float] = {
     "the-rive": 0.75,  # lists some open floor plans as "Call for pricing"
 }
 
-PAUSED: dict[str, str] = {}  # e.g. {"jsm-living": "paused: site down for maintenance"}
+PAUSED: dict[str, str] = {
+    # Remove a line once the source is scraped again.
+    "octave": "paused: site doesn't respond to GitHub's servers; asking Octave for permission",
+}
 
 
 @dataclass
