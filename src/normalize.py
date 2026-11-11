@@ -2,7 +2,9 @@
 
 Common columns:
     manager, listing_id, name, rent_per_bed_min, rent_per_bed_max, beds_min, beds_max,
-    available, url, scraped_on
+    available, url, scraped_on, status
+
+status: Available, Last unit, Leased, Sold out or Unavailable (as the manager shows it).
 """
 
 from __future__ import annotations
@@ -13,8 +15,9 @@ import pandas as pd
 
 COLUMNS = [
     "manager", "listing_id", "name", "rent_per_bed_min", "rent_per_bed_max",
-    "beds_min", "beds_max", "available", "url", "scraped_on",
+    "beds_min", "beds_max", "available", "url", "scraped_on", "status",
 ]
+OPEN_STATUSES = ("Available", "Last unit")  # anything else is leased / sold out / unavailable
 
 
 def _ids(df: pd.DataFrame, fallback: str) -> pd.Series:
@@ -41,6 +44,7 @@ def from_appfolio(df: pd.DataFrame) -> pd.DataFrame:
         "available": df["available_raw"],
         "url": df["url"],
         "scraped_on": df["scraped_on"],
+        "status": "Available",  # AppFolio only lists units that are for rent
     })
     return out[COLUMNS]
 
@@ -49,6 +53,7 @@ def from_greenstreet(df: pd.DataFrame) -> pd.DataFrame:
     """Green Street rows are buildings that already list per-bed price ranges."""
     out = df.rename(columns={"available_raw": "available"})
     out["listing_id"] = _ids(out, "name")
+    out["status"] = "Available"
     return out[COLUMNS]
 
 
@@ -69,6 +74,25 @@ def from_jsm(df: pd.DataFrame) -> pd.DataFrame:
         "available": df["terms"],
         "url": df["url"],
         "scraped_on": df["scraped_on"],
+        "status": "Available",
+    })
+    return out[COLUMNS]
+
+
+def from_standard(df: pd.DataFrame) -> pd.DataFrame:
+    """Scrapers built on src/scrapers/common.py already write per-bed prices and a status."""
+    out = pd.DataFrame({
+        "manager": df["manager"],
+        "listing_id": _ids(df, "name"),
+        "name": df["name"],
+        "rent_per_bed_min": df["rent_per_bed_min"],
+        "rent_per_bed_max": df["rent_per_bed_max"],
+        "beds_min": df["beds"],
+        "beds_max": df["beds"],
+        "available": df["available"],
+        "url": df["url"],
+        "scraped_on": df["scraped_on"],
+        "status": df["status"].fillna("Available"),
     })
     return out[COLUMNS]
 
@@ -80,6 +104,13 @@ SOURCES = {
     # More managers on AppFolio: same scraper, same columns (see the workflow).
     "ramshaw-real-estate": from_appfolio,
     "weiner-companies": from_appfolio,
+    # Scrapers that write the standard layout (src/scrapers/common.py).
+    "roland-realty": from_standard,
+    "mhm-properties": from_standard,
+    "smile-student-living": from_standard,
+    "octave": from_standard,
+    "seven07": from_standard,
+    "the-rive": from_standard,
 }
 
 # Buildings shown WITHOUT prices, e.g. when a manager doesn't allow price data:
@@ -104,6 +135,7 @@ def load_unpriced_buildings(path: Path = UNPRICED_PATH) -> pd.DataFrame:
         "available": "See manager's site",
         "url": df["url"],
         "scraped_on": df["listed_as_of"],
+        "status": "Available",
     })
     return out[COLUMNS]
 

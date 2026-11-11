@@ -20,7 +20,8 @@ from src.geo.landmarks import (  # noqa: E402
     BIKE_MPH, DETOUR, WALK_MPH, load_landmarks, miles_to, minutes,
 )
 from src.normalize import (  # noqa: E402
-    REMOTE_BASE, REPO, load_all, load_history, load_history_remote, load_latest_remote,
+    OPEN_STATUSES, REMOTE_BASE, REPO, load_all, load_history, load_history_remote,
+    load_latest_remote,
 )
 
 st.set_page_config(page_title="Champaign Lease Intelligence", page_icon="🏠", layout="wide")
@@ -28,6 +29,10 @@ st.set_page_config(page_title="Champaign Lease Intelligence", page_icon="🏠", 
 LISTING_TYPE = {
     "Green Street Realty": "Whole building (price range)",
     "JSM Living": "Floor plan",
+    "MHM Properties": "Apartment type",
+    "Octave": "Floor plan",
+    "Seven07": "Floor plan",
+    "The Rive": "Floor plan",
 }
 DEFAULT_TYPE = "Single unit"
 MANAGER_COLORS = {
@@ -36,6 +41,16 @@ MANAGER_COLORS = {
     "Community Property Management": "#9333EA",
     "Ramshaw Real Estate": "#D97706",
     "Weiner Companies": "#DB2777",
+    "Roland Realty": "#0E7490",
+    "MHM Properties": "#B91C1C",
+    "Smile Student Living": "#CA8A04",
+    "Octave": "#4F46E5",
+    "Seven07": "#0F766E",
+    "The Rive": "#C2410C",
+}
+STATUS_STYLE = {  # badge colors; anything not open is greyed out on the cards
+    "Last unit": "#E84A27", "Leased": "#64748B", "Sold out": "#64748B",
+    "Unavailable": "#64748B", "No longer listed": "#94A3B8",
 }
 FALLBACK_COLORS = ["#0891B2", "#65A30D", "#B45309", "#7C3AED", "#BE123C"]
 BED_OPTIONS = ["Studio", "1", "2", "3", "4", "5+"]
@@ -45,15 +60,36 @@ CARDS_PER_PAGE = 24
 
 # ---------------------------------------------------------------- data
 
+def no_longer_listed(current: pd.DataFrame, history: pd.DataFrame) -> pd.DataFrame:
+    """Listings we saw earlier that a manager has since taken down (usually: leased).
+
+    Last row seen for each listing missing from that manager's newest scrape."""
+    if history.empty:
+        return history
+    h = history[history["manager"].isin(current["manager"].unique())]
+    latest = current.groupby("manager")["scraped_on"].max()
+    h = h[h["scraped_on"] < h["manager"].map(latest)]
+    live = set(zip(current["manager"], current["listing_id"]))
+    gone = h[[k not in live for k in zip(h["manager"], h["listing_id"])]]
+    gone = gone.sort_values("scraped_on").drop_duplicates(["manager", "listing_id"], keep="last")
+    return gone.assign(status="No longer listed",
+                       available=lambda d: "last seen " + d["scraped_on"].astype(str))
+
+
 @st.cache_data(ttl=3600)  # re-read at most once an hour
 def get_data() -> tuple[pd.DataFrame, pd.DataFrame]:
-    """(today's listings with lat/lon, every daily scrape for the trend charts)."""
+    """(today's listings + ones taken down recently, with lat/lon; every daily scrape)."""
     local = load_all()
     if not local.empty:  # running on your laptop with data/ synced
-        return attach_distance(local, load_cache()), load_history()
-    # hosted: no data/ folder, so read the public daily files from GitHub
-    return (attach_distance(load_latest_remote(), load_remote_cache(REMOTE_BASE)),
-            load_history_remote())
+        listings, cache, history = local, load_cache(), load_history()
+    else:  # hosted: no data/ folder, so read the public daily files from GitHub
+        listings, cache, history = (load_latest_remote(), load_remote_cache(REMOTE_BASE),
+                                    load_history_remote())
+    if "status" in history:
+        history["status"] = history["status"].fillna("Available")
+    gone = no_longer_listed(listings, history)
+    both = pd.concat([listings, gone], ignore_index=True) if len(gone) else listings
+    return attach_distance(both, cache), history
 
 
 def manager_color(manager: str, managers: list[str]) -> str:
@@ -118,6 +154,10 @@ a.card:hover {box-shadow: 0 8px 24px rgba(19,41,75,.12); transform: translateY(-
 .card .price {font-size: 1.45rem; font-weight: 750; color: #E84A27;}
 .card .price small {font-size: .78rem; color: #5B6B85; font-weight: 500;}
 .card .meta {font-size: .8rem; color: #5B6B85; margin-top: 4px;}
+a.card.closed {background: #F6F7F9; opacity: .72;}
+a.card.closed .price {color: #64748B; text-decoration: line-through;}
+.status {float: right; color: #fff; font-weight: 700; padding: 2px 8px; border-radius: 999px;
+  text-transform: none; letter-spacing: 0;}
 .card .kind {font-size: .7rem; color: #8090A8; margin-top: 6px; text-transform: uppercase;
   letter-spacing: .05em;}
 .legend {display: flex; gap: 14px; flex-wrap: wrap; font-size: .8rem; color: #5B6B85;}
@@ -132,6 +172,8 @@ if df.empty:
 
 managers = sorted(df["manager"].unique())
 df["listing_type"] = df["manager"].map(LISTING_TYPE).fillna(DEFAULT_TYPE)
+df["status"] = df["status"].fillna("Available")
+df["is_open"] = df["status"].isin(OPEN_STATUSES)
 
 # ---------------------------------------------------------------- sidebar
 
@@ -153,6 +195,8 @@ with st.sidebar:
     st.markdown("### Narrow it down")
     query = st.text_input("Street or building", placeholder="e.g. Green, Armory, Sixth")
     chosen_managers = st.multiselect("Property managers", managers, default=managers)
+    show_closed = st.toggle("Show leased & sold-out listings", value=True,
+                            help="Marked in grey and listed after open ones.")
     show_unpriced = st.toggle("Include listings without a price", value=False)
 
     st.markdown("### Sort")
@@ -170,6 +214,10 @@ view = df[df["manager"].isin(chosen_managers)]
 in_budget = view["rent_per_bed_min"].between(*price_range)
 if show_unpriced:
     in_budget |= view["rent_per_bed_min"].isna()
+if show_closed:
+    in_budget |= ~view["is_open"] & view["rent_per_bed_min"].isna()  # leased: often no price
+else:
+    in_budget &= view["is_open"]
 view = view[in_budget]
 view = view[[matches_beds(a, b, chosen_beds) for a, b in zip(view["beds_min"], view["beds_max"])]]
 if max_miles != "Any":
@@ -179,7 +227,8 @@ if query.strip():
 sort_cols = {"Lowest price": (["rent_per_bed_min", "miles"], [True, True]),
              "Closest": (["miles", "rent_per_bed_min"], [True, True]),
              "Most bedrooms": (["beds_max", "rent_per_bed_min"], [False, True])}[sort_by]
-view = view.sort_values(sort_cols[0], ascending=sort_cols[1], na_position="last")
+view = view.sort_values(["is_open"] + sort_cols[0], ascending=[False] + sort_cols[1],
+                        na_position="last")
 
 # ---------------------------------------------------------------- hero + KPIs
 
@@ -187,8 +236,9 @@ updated = df["scraped_on"].max()
 st.markdown(
     f"""<div class="hero"><div class="eyebrow">UIUC off-campus housing · updated daily</div>
 <h1>Find your Champaign lease</h1>
-<p>{len(df):,} listings from {len(managers)} property managers, priced per bed, with distance
-to the places you actually go. Pick a spot on the left to re-measure everything.</p>
+<p>{int(df["is_open"].sum()):,} open listings from {len(managers)} property managers and
+buildings, priced per bed, with distance to the places you actually go. Pick a spot on the
+left to re-measure everything.</p>
 <div class="updated">Last updated {escape(str(updated))} · data refreshes every morning</div></div>""",
     unsafe_allow_html=True,
 )
@@ -200,11 +250,13 @@ def kpi(col, label: str, value: str, sub: str) -> None:
                  unsafe_allow_html=True)
 
 
-vp = view.dropna(subset=["rent_per_bed_min"])
-near = df[(df["miles"] <= 0.5) & df["rent_per_bed_min"].notna()]
-close_1mi = df[(df["miles"] <= 1.0) & df["rent_per_bed_min"].notna()]
+open_df = df[df["is_open"]]
+vp = view[view["is_open"]].dropna(subset=["rent_per_bed_min"])
+near = open_df[(open_df["miles"] <= 0.5) & open_df["rent_per_bed_min"].notna()]
+close_1mi = open_df[(open_df["miles"] <= 1.0) & open_df["rent_per_bed_min"].notna()]
 k1, k2, k3, k4 = st.columns(4)
-kpi(k1, "Matching your filters", f"{len(view):,}", f"of {len(df):,} listings tracked")
+kpi(k1, "Open & matching your filters", f"{int(view['is_open'].sum()):,}",
+    f"{int((~view['is_open']).sum()):,} more leased or sold out")
 kpi(k2, "Median rent / bed", f"${vp['rent_per_bed_min'].median():,.0f}" if len(vp) else "–",
     "lowest listed price, matching listings")
 kpi(k3, f"Within ½ mile of {escape(lm['short'])}", f"{len(near):,}",
@@ -221,7 +273,9 @@ t_list, t_map, t_market, t_trends, t_about = st.tabs(
 
 with t_list:
     left, right = st.columns([3, 1])
-    left.markdown(f"**{len(view):,} listings** · sorted by {sort_by.lower()}")
+    left.markdown(f"**{int(view['is_open'].sum()):,} open listings** · sorted by {sort_by.lower()}"
+                  + (f" · then {int((~view['is_open']).sum()):,} leased / sold out"
+                     if (~view["is_open"]).any() else ""))
     as_table = right.toggle("Table view", value=False)
     if view.empty:
         st.info("Nothing matches those filters. Try widening the distance or budget.")
@@ -229,10 +283,10 @@ with t_list:
         st.dataframe(
             view.assign(beds=[beds_label(a, b) for a, b in zip(view["beds_min"], view["beds_max"])]),
             hide_index=True, use_container_width=True, height=560,
-            column_order=["name", "manager", "rent_per_bed_min", "rent_per_bed_max", "beds",
+            column_order=["name", "manager", "status", "rent_per_bed_min", "rent_per_bed_max", "beds",
                           "miles", "walk_min", "bike_min", "available", "listing_type", "url"],
             column_config={
-                "name": "Property", "manager": "Manager",
+                "name": "Property", "manager": "Manager", "status": "Status",
                 "rent_per_bed_min": st.column_config.NumberColumn("From $/bed", format="$%d"),
                 "rent_per_bed_max": st.column_config.NumberColumn("To $/bed", format="$%d"),
                 "beds": "Bedrooms",
@@ -255,15 +309,20 @@ with t_list:
             else:
                 dist = f"{r.miles:.2f} mi · ~{r.bike_min:.0f} min bike"
             avail = "" if pd.isna(r.available) else f" · {escape(str(r.available))}"
+            status = ""
+            if r.status in STATUS_STYLE:
+                status = (f'<span class="status" style="background:{STATUS_STYLE[r.status]}">'
+                          f'{escape(r.status)}</span>')
             cards.append(
-                f'<a class="card" href="{escape(str(r.url))}" target="_blank" rel="noopener">'
+                f'<a class="card{"" if r.is_open else " closed"}" href="{escape(str(r.url))}" '
+                f'target="_blank" rel="noopener">'
                 f'<div class="top"><span class="badge" style="background:{color}">'
                 f'{escape(r.manager)}</span><span class="dist">{dist}</span></div>'
                 f'<div class="name">{escape(str(r.name))}</div>'
                 f'<div class="price">{price_label(r.rent_per_bed_min, r.rent_per_bed_max)} '
                 f'<small>/ bed / month</small></div>'
                 f'<div class="meta">{beds_label(r.beds_min, r.beds_max)}{avail}</div>'
-                f'<div class="kind">{escape(r.listing_type)}</div></a>')
+                f'<div class="kind">{escape(r.listing_type)}{status}</div></a>')
         st.markdown('<div class="cards">' + "".join(cards) + "</div>", unsafe_allow_html=True)
         if shown < len(view):
             st.write("")
@@ -272,7 +331,7 @@ with t_list:
                 st.rerun()
 
 with t_map:
-    pts = view.dropna(subset=["lat", "lon"]).copy()
+    pts = view[view["is_open"]].dropna(subset=["lat", "lon"]).copy()
     if pts.empty:
         st.info("No mappable listings match those filters.")
     else:
@@ -304,16 +363,17 @@ with t_map:
                              "<br/>{miles} mi to " + escape(lm["short"]),
                      "style": {"fontSize": "12px"}},
         ), height=560)
-        st.caption(f"{len(pts):,} of {len(view):,} matching listings have a map location. "
+        st.caption(f"{len(pts):,} of {int(view['is_open'].sum()):,} open matching listings have a "
+                   "map location (leased and sold-out listings aren't mapped). "
                    "Dot color runs from green (cheapest per bed shown) to red (priciest). "
                    "Navy dots are campus landmarks; orange is the one you picked.")
 
 with t_market:
-    m = view.dropna(subset=["rent_per_bed_min"])
+    m = view[view["is_open"]].dropna(subset=["rent_per_bed_min"])
     if m.empty:
         st.info("No priced listings match those filters.")
     else:
-        st.caption("Descriptive only: what's listed today, using each listing's lowest per-bed "
+        st.caption("Descriptive only: open listings today, using each listing's lowest per-bed "
                    "price. Listings differ in size, age and amenities, so these aren't "
                    "like-for-like comparisons.")
         color = alt.Color("manager:N", title="Manager", scale=alt.Scale(
@@ -431,6 +491,9 @@ and measures straight-line distance to campus landmarks.
 - **Distance and walk time.** Straight-line miles. Walk/bike times assume streets add about
   {int((DETOUR - 1) * 100)}% to the distance, at {WALK_MPH:g} mph walking and {BIKE_MPH:g} mph biking:
   rough estimates, not directions.
+- **Leased / sold out.** Shown in grey when a manager marks a unit leased or a floor plan
+  sold out. "No longer listed" means it was on the manager's site recently but has since been
+  taken down, which usually means it was leased.
 - **Always confirm with the manager.** Prices and availability change; the listing link goes
   to the manager's own page.
 

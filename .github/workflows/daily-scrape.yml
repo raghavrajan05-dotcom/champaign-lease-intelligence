@@ -43,6 +43,39 @@ jobs:
         continue-on-error: true
         run: python -m src.scrapers.jsm
 
+      - name: Scrape Ramshaw Real Estate
+        continue-on-error: true
+        run: >
+          python -m src.scrapers.appfolio
+          --base-url https://ram.appfolio.com
+          --manager "Ramshaw Real Estate"
+
+      - name: Scrape Weiner Companies
+        continue-on-error: true
+        run: >
+          python -m src.scrapers.appfolio
+          --base-url https://weinercompanies.appfolio.com
+          --manager "Weiner Companies"
+
+      - name: Scrape Roland Realty
+        continue-on-error: true
+        run: python -m src.scrapers.roland
+
+      - name: Scrape MHM Properties
+        continue-on-error: true
+        run: python -m src.scrapers.mhm
+
+      - name: Scrape Smile Student Living
+        continue-on-error: true
+        run: python -m src.scrapers.appfolio_feed
+
+      - name: Scrape Octave, Seven07 and The Rive
+        continue-on-error: true
+        run: |
+          python -m src.scrapers.floorplans octave || true
+          python -m src.scrapers.floorplans seven07 || true
+          python -m src.scrapers.floorplans the-rive || true
+
       - name: Geocode new addresses
         continue-on-error: true
         run: python -m src.geo.geocode
@@ -61,7 +94,7 @@ jobs:
           OUT="$RUNNER_TEMP/scrape"
           mkdir -p "$OUT/latest"
           cp -r data reference "$OUT/"
-          for p in community-property-management green-street-realty jsm-living; do
+          for p in community-property-management green-street-realty jsm-living ramshaw-real-estate weiner-companies roland-realty mhm-properties smile-student-living octave seven07 the-rive; do
             f=$(ls data/${p}_*.csv 2>/dev/null | sort | tail -1)
             if [ -n "$f" ]; then cp "$f" "$OUT/latest/$p.csv"; fi
           done

@@ -19,7 +19,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from src.normalize import COLUMNS, SOURCES
+from src.normalize import COLUMNS, OPEN_STATUSES, SOURCES
 
 MAX_COUNT_DROP = 0.5        # fail if listings fall by more than 50% vs the previous scrape
 MAX_MISSING_PRICE = 0.25    # fail if more than 25% of rows have no per-bed price
@@ -28,6 +28,11 @@ MAX_AGE_DAYS = 3            # fail if a manager's newest scrape is older than th
 
 # Sources deliberately not scraped right now, with the reason. They are reported
 # as SKIP instead of failing every run (an alert that always fires gets ignored).
+# Sources allowed more missing prices than MAX_MISSING_PRICE, with the reason.
+MISSING_PRICE_OK: dict[str, float] = {
+    "the-rive": 0.75,  # lists some open floor plans as "Call for pricing"
+}
+
 PAUSED: dict[str, str] = {}  # e.g. {"jsm-living": "paused: site down for maintenance"}
 
 
@@ -84,10 +89,12 @@ def check_manager(prefix: str, normalize, data_dir: str = "data",
     if df.empty:
         return checks
 
-    # 3. Completeness: share of rows with a usable price and a name.
-    missing_price = df["rent_per_bed_min"].isna().mean()
-    checks.append(Check(manager, "prices present", missing_price <= MAX_MISSING_PRICE,
-                        f"{missing_price:.0%} missing"))
+    # 3. Completeness: share of open listings (not leased / sold out) with a price, and names.
+    open_rows = df[df["status"].isin(OPEN_STATUSES)]
+    missing_price = open_rows["rent_per_bed_min"].isna().mean() if len(open_rows) else 0.0
+    limit = MISSING_PRICE_OK.get(prefix, MAX_MISSING_PRICE)
+    checks.append(Check(manager, "prices present", missing_price <= limit,
+                        f"{missing_price:.0%} of {len(open_rows)} open listings missing a price"))
     checks.append(Check(manager, "names present", df["name"].notna().all(),
                         f"{df['name'].isna().sum()} missing"))
 
