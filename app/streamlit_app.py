@@ -7,30 +7,31 @@ import streamlit as st
 # Let the app import our own code from src/ (needed for `streamlit run` and for hosting).
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.geo.geocode import attach_distance, load_cache, load_remote_cache  # noqa: E402
-from src.normalize import REMOTE_BASE, load_all, load_latest_remote  # noqa: E402
+from src.normalize import (  # noqa: E402
+    REMOTE_BASE, load_all, load_latest_remote, load_unpriced_buildings,
+)
 
 st.set_page_config(page_title="Champaign Lease Intelligence", layout="wide")
 
 
 @st.cache_data(ttl=3600)  # re-read at most once an hour
-def get_listings() -> pd.DataFrame:
+def get_data() -> tuple[pd.DataFrame, pd.DataFrame]:
+    """(priced listings, price-free buildings), both with distance to the Quad."""
     local = load_all()
     if not local.empty:  # running on your laptop with data/ synced
-        return attach_distance(local, load_cache())
-    # hosted: no data/ folder, so read the public daily files from GitHub
-    return attach_distance(load_latest_remote(), load_remote_cache(REMOTE_BASE))
+        listings, cache = local, load_cache()
+    else:  # hosted: no data/ folder, so read the public daily files from GitHub
+        listings, cache = load_latest_remote(), load_remote_cache(REMOTE_BASE)
+    return attach_distance(listings, cache), attach_distance(load_unpriced_buildings(), cache)
 
 
-df = get_listings()
+df, buildings = get_data()
 
 st.title("Champaign Lease Intelligence")
 
 if df.empty:
     st.warning("No data yet. Run the scrapers or: bash scripts/sync_data.sh")
     st.stop()
-
-if "Green Street Realty" not in set(df["manager"]):
-    st.info("Green Street Realty listings will be added once they approve. We've asked for their permission.")
 
 updated = df.groupby("manager")["scraped_on"].max()
 st.caption("Last updated: " + " · ".join(f"{m} {d}" for m, d in updated.items()))
@@ -74,8 +75,26 @@ st.dataframe(
         "url": st.column_config.LinkColumn("Listing"),
     },
 )
+# ---- buildings listed without prices (manager declined price data) ----
+if not buildings.empty:
+    b = buildings if max_miles == "Any" else buildings[buildings["miles_to_quad"] <= max_miles]
+    st.subheader(f"{len(b)} more buildings, prices not listed")
+    st.caption(
+        "Green Street Realty asked that its prices not be included here. "
+        "Their buildings are listed with distance to campus; see their site for prices and availability."
+    )
+    st.dataframe(
+        b.sort_values("miles_to_quad")[["manager", "name", "miles_to_quad", "url"]],
+        hide_index=True,
+        column_config={
+            "manager": "Manager",
+            "name": "Building",
+            "miles_to_quad": st.column_config.NumberColumn("Miles to Quad", format="%.2f"),
+            "url": st.column_config.LinkColumn("Prices on manager's site"),
+        },
+    )
+
 st.caption(
-    "Green Street prices are per-bed ranges for a whole building. "
     "Community Property Management lists whole-unit rent; per-bed price here "
     "is that rent split evenly across bedrooms (studios count as one bed). "
     "Distances are straight-line miles to the center of the Main Quad. "

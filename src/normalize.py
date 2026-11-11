@@ -7,6 +7,8 @@ Common columns:
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pandas as pd
 
 COLUMNS = [
@@ -36,12 +38,6 @@ def from_appfolio(df: pd.DataFrame) -> pd.DataFrame:
     return out[COLUMNS]
 
 
-def from_greenstreet(df: pd.DataFrame) -> pd.DataFrame:
-    """Green Street rows are buildings that already list per-bed price ranges."""
-    out = df.rename(columns={"available_raw": "available"})
-    return out[COLUMNS]
-
-
 def from_jsm(df: pd.DataFrame) -> pd.DataFrame:
     """JSM rows are unit types. Use JSM's per-person price when listed;
     otherwise split the unit price evenly by bed (studios count as 1 bed)."""
@@ -64,9 +60,32 @@ def from_jsm(df: pd.DataFrame) -> pd.DataFrame:
 
 SOURCES = {
     "community-property-management": from_appfolio,
-    "green-street-realty": from_greenstreet,
     "jsm-living": from_jsm,
 }
+
+# Buildings shown WITHOUT prices: their manager declined to let us use price data,
+# so only the building's address and a link to the manager's site are listed.
+# A fixed list (not scraped daily). Columns: manager, name, url, listed_as_of.
+UNPRICED_PATH = Path(__file__).resolve().parents[1] / "reference" / "unpriced_buildings.csv"
+
+
+def load_unpriced_buildings(path: Path = UNPRICED_PATH) -> pd.DataFrame:
+    """Price-free building list in the common columns (prices and beds left empty)."""
+    if not path.exists():
+        return pd.DataFrame(columns=COLUMNS)
+    df = pd.read_csv(path)
+    out = pd.DataFrame({
+        "manager": df["manager"],
+        "name": df["name"],
+        "rent_per_bed_min": float("nan"),
+        "rent_per_bed_max": float("nan"),
+        "beds_min": float("nan"),
+        "beds_max": float("nan"),
+        "available": "See manager's site",
+        "url": df["url"],
+        "scraped_on": df["listed_as_of"],
+    })
+    return out[COLUMNS]
 
 
 # Public copy of the daily data: the workflow writes the newest file per manager

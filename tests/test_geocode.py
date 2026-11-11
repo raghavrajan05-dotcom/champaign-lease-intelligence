@@ -1,11 +1,28 @@
 import pandas as pd
 
-from src.geo.geocode import attach_distance, candidates, clean_address, geocode
+from src.geo.geocode import (
+    attach_distance, candidates, clean_address, geocode, street_variants,
+)
 
 
 def test_clean_address():
     assert clean_address("122 W. Hill St.") == "122 W Hill St"
     assert clean_address("306-410 E Michigan, Urbana, IL 61801") == "306 E Michigan, Urbana, IL 61801"
+    assert clean_address("601 S. Sixth - Campus Center") == "601 S Sixth"
+
+
+def test_street_variants_for_missing_suffix_and_ordinals():
+    assert street_variants("601 S Sixth") == [
+        "601 S Sixth", "601 S 6th", "601 S Sixth St", "601 S 6th St"]
+    assert street_variants("105 E Armory Ave") == ["105 E Armory Ave"]
+    assert street_variants("217 S Neil St, Champaign, IL 61820") == [
+        "217 S Neil St, Champaign, IL 61820"]
+
+
+def test_suffixless_address_tries_st_before_urbana():
+    assert candidates("105 E. Green") == [
+        "105 E Green, Champaign, IL", "105 E Green St, Champaign, IL",
+        "105 E Green, Urbana, IL", "105 E Green St, Urbana, IL"]
 
 
 def test_candidates_add_city_only_when_missing():

@@ -29,7 +29,6 @@ from src.normalize import SOURCES
 DB_PATH = Path("warehouse/lease.duckdb")
 DATE_RE = re.compile(r"_(\d{4}-\d{2}-\d{2})\.csv$")
 LISTING_TYPE = {
-    "Green Street Realty": "Building (price range)",
     "JSM Living": "Unit type",
     "Community Property Management": "Single unit",
 }

@@ -114,9 +114,9 @@ def attach_distance(listings: pd.DataFrame, cache: pd.DataFrame) -> pd.DataFrame
 
 
 def main() -> None:
-    from src.normalize import load_all
+    from src.normalize import load_all, load_unpriced_buildings
 
-    names = load_all()["name"].dropna().unique()
+    names = pd.concat([load_all()["name"], load_unpriced_buildings()["name"]]).dropna().unique()
     cache = load_cache()
     found = set(cache.dropna(subset=["lat"])["name"])
     todo = [n for n in names if n not in found]  # new addresses + earlier misses

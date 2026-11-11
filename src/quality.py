@@ -25,9 +25,7 @@ RENT_PER_BED_RANGE = (200, 3000)  # $/bed/month outside this is almost surely a 
 
 # Sources deliberately not scraped right now, with the reason. They are reported
 # as SKIP instead of failing every run (an alert that always fires gets ignored).
-PAUSED = {
-    "green-street-realty": "paused: site returns 403 to GitHub; permission requested",
-}
+PAUSED: dict[str, str] = {}  # e.g. {"jsm-living": "paused: site down for maintenance"}
 
 
 @dataclass
