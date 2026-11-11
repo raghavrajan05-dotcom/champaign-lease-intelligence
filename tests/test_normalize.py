@@ -91,3 +91,15 @@ def test_load_history_stacks_every_day(tmp_path):
     h = load_history(str(tmp_path))
     assert h["rent_per_bed_min"].tolist() == [900, 950]
     assert h["listing_id"].nunique() == 1  # same listing both days
+
+
+def test_appfolio_keeps_individually_leased_rooms():
+    df = pd.DataFrame({
+        "manager": ["R"] * 3, "external_id": ["a", "b", "c"], "scraped_on": ["2026-11-11"] * 3,
+        "title": ["Individual Leases in 4-Bedroom Apartment", "Nice 2BR", "Big 4BR house"],
+        "address": ["1 A St", "2 B St", "3 C St"], "rent": [515.0, 1400.0, 450.0],
+        "beds": [4, 2, 4], "available_raw": ["Now"] * 3, "url": ["u"] * 3,
+    })
+    out = from_appfolio(df)
+    # says "individual"; normal split; split would be $113/bed, so it's per person
+    assert out["rent_per_bed_min"].tolist() == [515.0, 700.0, 450.0]

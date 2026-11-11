@@ -18,6 +18,7 @@ FEED = ("https://www.smilestudentliving.com/rts/collections/public/0af4bf1b/runt
 CITIES = re.compile(r",\s*(Champaign|Urbana|Savoy)\b", re.I)
 PER_PERSON = re.compile(r"per[ -]person|individu\w* leas|by[ -]the[ -]bed|per bed", re.I)
 MAX_PAGES = 20
+MIN_PLAUSIBLE_PER_BED = 200  # a whole-unit rent split below this is almost surely per person
 
 
 def parse(listings: list[dict]) -> list[dict]:
@@ -28,7 +29,8 @@ def parse(listings: list[dict]) -> list[dict]:
         beds = x.get("bedrooms")
         rent = x.get("market_rent") or None
         text = f"{x.get('marketing_title') or ''} {x.get('marketing_description') or ''}"
-        per_person = bool(x.get("by_the_bed")) or bool(PER_PERSON.search(text))
+        per_person = (bool(x.get("by_the_bed")) or bool(PER_PERSON.search(text))
+                      or (rent is not None and rent / max(beds or 1, 1) < MIN_PLAUSIBLE_PER_BED))
         per_bed = rent if per_person or not rent else round(rent / max(beds or 1, 1))
         rows.append({
             "external_id": x["listable_uid"],

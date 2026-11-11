@@ -26,13 +26,30 @@ def _ids(df: pd.DataFrame, fallback: str) -> pd.Series:
     return df[col].astype(str)
 
 
+# Listings whose text says the price is for one bedroom, not the whole unit.
+PER_PERSON_RE = (r"individual|per[ -]person|per[ -]bed\b|by[ -]the[ -]bed|roommate matching"
+                 r"|bedrooms? available|furnished bedrooms")
+MIN_PLAUSIBLE_PER_BED = 200  # a whole-unit rent split below this is almost surely per person
+
+
+def per_person_mask(text: pd.Series, rent: pd.Series, beds: pd.Series) -> pd.Series:
+    """True where `rent` is already a per-bed price: the listing says so, or splitting it
+    across the bedrooms would give an implausibly low price."""
+    says_so = text.fillna("").str.contains(PER_PERSON_RE, case=False, regex=True)
+    too_low = (rent / beds.clip(lower=1)) < MIN_PLAUSIBLE_PER_BED
+    return says_so | too_low.fillna(False)
+
+
 def from_appfolio(df: pd.DataFrame) -> pd.DataFrame:
-    """AppFolio rows are single units priced per unit: split rent evenly by bed.
+    """AppFolio rows are single units, usually priced per unit: split rent evenly by bed.
 
     Studios (0 beds) count as 1 bed. Units with unknown beds get no per-bed price.
+    Rooms advertised individually ("individual leases", "per person") keep their price.
     """
     beds_for_split = df["beds"].clip(lower=1)
-    per_bed = (df["rent"] / beds_for_split).round(0)
+    text = df["title"] if "title" in df else pd.Series("", index=df.index)
+    per_person = per_person_mask(text, df["rent"], df["beds"])
+    per_bed = (df["rent"] / beds_for_split).round(0).where(~per_person, df["rent"])
     out = pd.DataFrame({
         "manager": df["manager"],
         "listing_id": _ids(df, "address"),
