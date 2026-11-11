@@ -2,9 +2,13 @@
 
 Common columns:
     manager, listing_id, name, rent_per_bed_min, rent_per_bed_max, beds_min, beds_max,
-    available, url, scraped_on, status
+    available, url, scraped_on, status, price_basis, fees_per_bed, listed_price
 
-status: Available, Last unit, Leased, Sold out or Unavailable (as the manager shows it).
+status       Available, Last unit, Leased, Sold out or Unavailable (as the manager shows it).
+price_basis  How rent_per_bed was obtained (see the BASIS_* labels). Shown on the site.
+fees_per_bed Required monthly fees (e.g. utilities) per person, when the manager states them.
+listed_price The manager's price when we can't tell if it is per person or per unit; in that
+             case rent_per_bed is left empty rather than guessed.
 """
 
 from __future__ import annotations
@@ -16,7 +20,14 @@ import pandas as pd
 COLUMNS = [
     "manager", "listing_id", "name", "rent_per_bed_min", "rent_per_bed_max",
     "beds_min", "beds_max", "available", "url", "scraped_on", "status",
+    "price_basis", "fees_per_bed", "listed_price",
 ]
+BASIS_PER_PERSON = "Per person, as listed"
+BASIS_RANGE = "Per-bed range for the building, as listed"
+BASIS_ONE_BED = "Whole-unit rent (studio / 1 bed)"
+BASIS_SPLIT = "Estimate: unit rent ÷ bedrooms"
+BASIS_ASSUMED = "Per person (assumed: unit ÷ beds would be under $200)"
+BASIS_NOT_STATED = "Not shown: manager doesn't say if per person or per unit"
 OPEN_STATUSES = ("Available", "Last unit")  # anything else is leased / sold out / unavailable
 
 
@@ -28,28 +39,40 @@ def _ids(df: pd.DataFrame, fallback: str) -> pd.Series:
 
 # Listings whose text says the price is for one bedroom, not the whole unit.
 PER_PERSON_RE = (r"individual|per[ -]person|per[ -]bed\b|by[ -]the[ -]bed|roommate matching"
-                 r"|bedrooms? available|furnished bedrooms")
+                 r"|bedrooms? available|furnished bedrooms|per room\b")
 MIN_PLAUSIBLE_PER_BED = 200  # a whole-unit rent split below this is almost surely per person
 
 
+def unit_basis(text: pd.Series, rent: pd.Series, beds: pd.Series) -> pd.Series:
+    """For whole-unit listings: which BASIS_* label applies to each row."""
+    says_per_person = text.fillna("").str.contains(PER_PERSON_RE, case=False, regex=True)
+    too_low = ((rent / beds.clip(lower=1)) < MIN_PLAUSIBLE_PER_BED).fillna(False)
+    one_bed = beds.fillna(99) <= 1
+    basis = pd.Series(BASIS_SPLIT, index=rent.index)
+    basis[too_low] = BASIS_ASSUMED
+    basis[says_per_person] = BASIS_PER_PERSON
+    basis[one_bed] = BASIS_ONE_BED
+    return basis
+
+
 def per_person_mask(text: pd.Series, rent: pd.Series, beds: pd.Series) -> pd.Series:
-    """True where `rent` is already a per-bed price: the listing says so, or splitting it
-    across the bedrooms would give an implausibly low price."""
-    says_so = text.fillna("").str.contains(PER_PERSON_RE, case=False, regex=True)
-    too_low = (rent / beds.clip(lower=1)) < MIN_PLAUSIBLE_PER_BED
-    return says_so | too_low.fillna(False)
+    """True where `rent` is already a per-person price (no split needed)."""
+    return unit_basis(text, rent, beds).isin([BASIS_PER_PERSON, BASIS_ASSUMED])
 
 
 def from_appfolio(df: pd.DataFrame) -> pd.DataFrame:
     """AppFolio rows are single units, usually priced per unit: split rent evenly by bed.
 
     Studios (0 beds) count as 1 bed. Units with unknown beds get no per-bed price.
-    Rooms advertised individually ("individual leases", "per person") keep their price.
+    Rooms advertised individually (title or description says "individual lease",
+    "per person", ...) keep their price.
     """
-    beds_for_split = df["beds"].clip(lower=1)
-    text = df["title"] if "title" in df else pd.Series("", index=df.index)
-    per_person = per_person_mask(text, df["rent"], df["beds"])
-    per_bed = (df["rent"] / beds_for_split).round(0).where(~per_person, df["rent"])
+    text = df.get("title", pd.Series("", index=df.index)).fillna("")
+    if "description" in df:
+        text = text + " " + df["description"].fillna("")
+    basis = unit_basis(text, df["rent"], df["beds"])
+    split = basis == BASIS_SPLIT
+    per_bed = df["rent"].where(~split, (df["rent"] / df["beds"].clip(lower=1)).round(0))
     out = pd.DataFrame({
         "manager": df["manager"],
         "listing_id": _ids(df, "address"),
@@ -62,6 +85,9 @@ def from_appfolio(df: pd.DataFrame) -> pd.DataFrame:
         "url": df["url"],
         "scraped_on": df["scraped_on"],
         "status": "Available",  # AppFolio only lists units that are for rent
+        "price_basis": basis.where(df["rent"].notna(), None),
+        "fees_per_bed": float("nan"),
+        "listed_price": float("nan"),
     })
     return out[COLUMNS]
 
@@ -71,6 +97,9 @@ def from_greenstreet(df: pd.DataFrame) -> pd.DataFrame:
     out = df.rename(columns={"available_raw": "available"})
     out["listing_id"] = _ids(out, "name")
     out["status"] = "Available"
+    out["price_basis"] = BASIS_RANGE
+    out["fees_per_bed"] = float("nan")
+    out["listed_price"] = float("nan")
     return out[COLUMNS]
 
 
@@ -92,6 +121,11 @@ def from_jsm(df: pd.DataFrame) -> pd.DataFrame:
         "url": df["url"],
         "scraped_on": df["scraped_on"],
         "status": "Available",
+        "price_basis": [BASIS_PER_PERSON if pd.notna(pp) else
+                        BASIS_ONE_BED if (b if pd.notna(b) else 99) <= 1 else BASIS_SPLIT
+                        for pp, b in zip(df["rent_person_min"], df["beds"])],
+        "fees_per_bed": float("nan"),
+        "listed_price": float("nan"),
     })
     return out[COLUMNS]
 
@@ -110,6 +144,9 @@ def from_standard(df: pd.DataFrame) -> pd.DataFrame:
         "url": df["url"],
         "scraped_on": df["scraped_on"],
         "status": df["status"].fillna("Available"),
+        "price_basis": df["price_basis"] if "price_basis" in df else None,
+        "fees_per_bed": df["fees_per_bed"] if "fees_per_bed" in df else float("nan"),
+        "listed_price": df["listed_price"] if "listed_price" in df else float("nan"),
     })
     return out[COLUMNS]
 
@@ -153,6 +190,9 @@ def load_unpriced_buildings(path: Path = UNPRICED_PATH) -> pd.DataFrame:
         "url": df["url"],
         "scraped_on": df["listed_as_of"],
         "status": "Available",
+        "price_basis": None,
+        "fees_per_bed": float("nan"),
+        "listed_price": float("nan"),
     })
     return out[COLUMNS]
 

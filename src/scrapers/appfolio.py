@@ -31,8 +31,9 @@ ADDRESS_RE = re.compile(r"[^\n]*?,\s*(?:Champaign|Urbana|Savoy),\s*IL\s*\d{5}")
 FIELDS = [
     "manager", "external_id", "scraped_on", "title", "address",
     "rent", "price_basis", "beds", "baths", "sqft",
-    "available_date", "available_raw", "url",
+    "available_date", "available_raw", "url", "description",
 ]
+DESCRIPTION_CHARS = 800  # the card's text, kept to spot rooms rented individually
 
 
 # ---------- small parsers (pure functions, easy to test) ----------
@@ -130,6 +131,8 @@ def parse_listings(html: str, base_url: str, manager: str, today: date) -> list[
             m = ADDRESS_RE.search(text)
             address = m.group(0).strip() if m else None
 
+        body = box.select_one(".listing-item__body")
+        description = (body or box).get_text(" ", strip=True)[:DESCRIPTION_CHARS]
         beds, baths = parse_bed_bath(kv.get("BED / BATH"))
         available_raw = kv.get("AVAILABLE")
         rows.append({
@@ -146,6 +149,7 @@ def parse_listings(html: str, base_url: str, manager: str, today: date) -> list[
             "available_date": (d.isoformat() if (d := parse_available(available_raw, today)) else None),
             "available_raw": available_raw,
             "url": f"{base_url.rstrip('/')}/listings/detail/{listing_id}",
+            "description": description,
         })
     return rows
 

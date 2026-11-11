@@ -16,24 +16,34 @@ import re
 
 from bs4 import BeautifulSoup
 
+from src.normalize import BASIS_NOT_STATED, BASIS_ONE_BED, BASIS_PER_PERSON
 from src.scrapers.common import get, money, save
 
+# per_person: True once confirmed (by the building's own site or a call) that its listed
+# floor-plan prices are per person. Until then (None) the price is kept as listed_price
+# and NOT shown as a per-bed price.
 BUILDINGS = {
-    "octave": {"manager": "Octave", "address": "210 S 4th St",
+    "octave": {"manager": "Octave", "address": "210 S 4th St", "per_person": None,
                "url": "https://liveatoctave.com/floor-plans/"},
-    "seven07": {"manager": "Seven07", "address": "707 S 4th St",
+    "seven07": {"manager": "Seven07", "address": "707 S 4th St", "per_person": None,
                 "url": "https://cgsynergyapi-prod.wonderfulisland-00679a9d.centralus."
                        "azurecontainerapps.io/api/community/liveseven07.com",
                 "page": "https://liveseven07.com/floor-plans/"},
-    "the-rive": {"manager": "The Rive", "address": "212 E Green St",
+    "the-rive": {"manager": "The Rive", "address": "212 E Green St", "per_person": None,
                  "url": "https://www.therivechampaign.com/floor-plans/"},
 }
 
 
 def row(b: dict, plan: str, beds, baths, price, status: str, url: str) -> dict:
+    one_bed = (beds or 0) <= 1
+    confirmed = b.get("per_person") or one_bed  # 1 bed: per person == per unit
+    per_bed = price if confirmed else None
     return {"external_id": plan, "name": f"{b['address']} - {b['manager']} ({plan})",
-            "beds": beds, "baths": baths, "rent_per_bed_min": price, "rent_per_bed_max": price,
-            "rent_unit": None, "status": status, "available": None, "url": url}
+            "beds": beds, "baths": baths, "rent_per_bed_min": per_bed, "rent_per_bed_max": per_bed,
+            "rent_unit": None, "status": status, "available": None, "url": url,
+            "price_basis": (None if price is None else BASIS_ONE_BED if one_bed
+                            else BASIS_PER_PERSON if confirmed else BASIS_NOT_STATED),
+            "listed_price": price}
 
 
 def parse_octave(html: str, b: dict) -> list[dict]:

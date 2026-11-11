@@ -9,6 +9,7 @@ import re
 
 from bs4 import BeautifulSoup
 
+from src.normalize import BASIS_ONE_BED, BASIS_PER_PERSON, BASIS_SPLIT
 from src.scrapers.common import get, money, save
 
 MANAGER = "Roland Realty"
@@ -32,9 +33,11 @@ def parse(html: str) -> list[dict]:
         if beds is None and (s := _field(card, "bed-string")):
             beds = 0 if "studio" in s.lower() else int(re.search(r"\d+", s).group())
         unit = money(_field(card, "rent-fall"))
-        per_bed = money(_field(card, "rent-fall-btb"))
+        per_bed = money(_field(card, "rent-fall-btb"))  # Roland's own "per bed, per month"
+        basis = BASIS_ONE_BED if (beds or 0) <= 1 else BASIS_PER_PERSON
         if per_bed is None and unit is not None:
             per_bed = round(unit / max(beds or 1, 1))
+            basis = BASIS_ONE_BED if (beds or 0) <= 1 else BASIS_SPLIT
         available = (_field(card, "available") or "").lower() == "true"
         rows.append({
             "external_id": card["href"],
@@ -46,6 +49,7 @@ def parse(html: str) -> list[dict]:
             "status": "Available" if available else "Unavailable",
             "available": "Fall" if available else None,
             "url": BASE + card["href"],
+            "price_basis": basis if per_bed is not None else None,
         })
     return rows
 

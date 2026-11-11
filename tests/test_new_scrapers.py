@@ -59,9 +59,20 @@ def test_seven07_sold_out():
         {"name": "Studio", "bedroomCount": 0.0, "bathroomCount": 1.0, "marketRent": 1720,
          "unitsAvailable": 0}]})
     a, b = floorplans.parse_seven07(feed, floorplans.BUILDINGS["seven07"])
-    assert (a["beds"], a["rent_per_bed_min"], a["status"]) == (4, 1250, "Available")
+    # per person vs per unit not confirmed yet: keep the listed price, show no per-bed price
+    assert (a["beds"], a["rent_per_bed_min"], a["listed_price"], a["status"]) == (4, None, 1250, "Available")
+    assert a["price_basis"].startswith("Not shown")
     assert b["status"] == "Sold out"
+    assert b["rent_per_bed_min"] == 1720  # studio: per person == per unit
     assert a["name"].startswith("707 S 4th St - Seven07")
+
+
+def test_confirmed_building_shows_per_bed_price():
+    b = {**floorplans.BUILDINGS["seven07"], "per_person": True}
+    feed = json.dumps({"floorPlans": [{"name": "4BR", "bedroomCount": 4.0, "bathroomCount": 4.0,
+                                       "marketRent": 1250, "unitsAvailable": 3}]})
+    (a,) = floorplans.parse_seven07(feed, b)
+    assert (a["rent_per_bed_min"], a["price_basis"]) == (1250, "Per person, as listed")
 
 
 def test_the_rive_uses_special_price():
@@ -72,14 +83,14 @@ def test_the_rive_uses_special_price():
          "rates": [{"value": "", "special_value": ""}]}]}}}
     html = f"<script>var localData = {{}};\nlocalData.apiTransitionData = {json.dumps(data)};</script>"
     a, b = floorplans.parse_the_rive(html, floorplans.BUILDINGS["the-rive"])
-    assert (a["rent_per_bed_min"], a["status"]) == (1119, "Available")
-    assert (b["rent_per_bed_min"], b["status"]) == (None, "Sold out")
+    assert (a["listed_price"], a["rent_per_bed_min"], a["status"]) == (1119, None, "Available")
+    assert (b["listed_price"], b["status"]) == (None, "Sold out")
 
 
 def test_smile_per_person_and_city_filter():
     base = {"listable_uid": "u1", "database_url": "https://fairlawn.appfolio.com/",
             "bathrooms": 1.0, "available": True, "available_date": "2027-08-17",
-            "marketing_description": ""}
+            "marketing_description": "Floor 2: $2,157.00<br/>A utility fee of $195.00 covers internet"}
     rows = appfolio_feed.parse([
         {**base, "full_address": "809 W Springfield, Urbana, IL 61801", "bedrooms": 4,
          "market_rent": 399.0, "marketing_title": "Individual Leasing Available!"},
@@ -88,5 +99,7 @@ def test_smile_per_person_and_city_filter():
         {**base, "listable_uid": "u3", "full_address": "360 Olympic Ln, Decatur, IL 62526",
          "bedrooms": 2, "market_rent": 932.0, "marketing_title": "x"},
     ])
-    assert [r["rent_per_bed_min"] for r in rows] == [399.0, 700]  # per person; whole unit split
+    # Smile's rent is per person even when the title doesn't say so (303 E Green bug)
+    assert [r["rent_per_bed_min"] for r in rows] == [399.0, 1400.0]
+    assert [r["fees_per_bed"] for r in rows] == [49, 98]  # $195 per unit, split by bedrooms
     assert rows[0]["url"] == "https://fairlawn.appfolio.com/listings/detail/u1"

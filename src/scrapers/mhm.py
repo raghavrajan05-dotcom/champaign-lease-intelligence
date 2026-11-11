@@ -9,6 +9,7 @@ import re
 
 from bs4 import BeautifulSoup
 
+from src.normalize import BASIS_ONE_BED, BASIS_PER_PERSON, BASIS_SPLIT
 from src.scrapers.common import get, money, save
 
 MANAGER = "MHM Properties"
@@ -35,9 +36,11 @@ def parse_line(line: str, per_person_card: bool = False) -> dict:
     hi = max(prices) if prices and status != "Leased" else None
     per_person = per_person_card or "PERSON" in upper
     n_beds = int(beds.group(1)) if beds else None
-    if lo is not None and not per_person and n_beds:  # whole-unit price: split by beds
+    basis = BASIS_ONE_BED if (n_beds or 0) <= 1 else BASIS_PER_PERSON if per_person else BASIS_SPLIT
+    if lo is not None and basis == BASIS_SPLIT:  # whole-unit price: split by beds
         lo, hi = round(lo / n_beds), round(hi / n_beds)
     return {"plan": label.strip(), "beds": n_beds,
+            "price_basis": basis if lo is not None else None,
             "baths": float(baths.group(1)) if baths else None,
             "rent_per_bed_min": lo, "rent_per_bed_max": hi, "status": status}
 

@@ -111,6 +111,24 @@ def price_label(lo, hi) -> str:
     return f"${lo:,.0f}" if pd.isna(hi) or hi == lo else f"${lo:,.0f}–${hi:,.0f}"
 
 
+def price_html(r) -> str:
+    """Price line, how it was worked out, and any required monthly fees."""
+    basis = "" if pd.isna(r.price_basis) else escape(str(r.price_basis))
+    if pd.isna(r.rent_per_bed_min):
+        if pd.notna(r.listed_price):
+            return (f'<div class="price listed">Listed ${r.listed_price:,.0f}</div>'
+                    f'<div class="basis warn">{basis}. Ask the manager.</div>')
+        return '<div class="price listed">Price not listed</div>'
+    html = (f'<div class="price">{price_label(r.rent_per_bed_min, r.rent_per_bed_max)} '
+            f'<small>/ bed / month</small></div>')
+    if pd.notna(r.fees_per_bed) and r.fees_per_bed > 0:
+        html += (f'<div class="fees">+ ${r.fees_per_bed:,.0f} required monthly fees per person '
+                 f'(≈ ${r.rent_per_bed_min + r.fees_per_bed:,.0f} total)</div>')
+    if basis:
+        html += f'<div class="basis{" warn" if "Estimate" in basis or "assumed" in basis else ""}">{basis}</div>'
+    return html
+
+
 def matches_beds(lo, hi, chosen: set[int]) -> bool:
     """Does a listing offering lo..hi bedrooms include any chosen count? (5 means 5+)."""
     if pd.isna(lo):
@@ -158,6 +176,10 @@ a.card.closed {background: #F6F7F9; opacity: .72;}
 a.card.closed .price {color: #64748B; text-decoration: line-through;}
 .status {float: right; color: #fff; font-weight: 700; padding: 2px 8px; border-radius: 999px;
   text-transform: none; letter-spacing: 0;}
+.card .price.listed {font-size: 1.05rem; color: #5B6B85;}
+.card .fees {font-size: .78rem; color: #13294B; margin-top: 2px;}
+.card .basis {font-size: .72rem; color: #5B6B85; margin-top: 2px;}
+.card .basis.warn {color: #B45309;}
 .card .kind {font-size: .7rem; color: #8090A8; margin-top: 6px; text-transform: uppercase;
   letter-spacing: .05em;}
 .legend {display: flex; gap: 14px; flex-wrap: wrap; font-size: .8rem; color: #5B6B85;}
@@ -239,7 +261,8 @@ st.markdown(
 <p>{int(df["is_open"].sum()):,} open listings from {len(managers)} property managers and
 buildings, priced per bed, with distance to the places you actually go. Pick a spot on the
 left to re-measure everything.</p>
-<div class="updated">Last updated {escape(str(updated))} · data refreshes every morning</div></div>""",
+<div class="updated">Last updated {escape(str(updated))} · data refreshes every morning ·
+prices are base rent; required monthly fees are added where the manager states them</div></div>""",
     unsafe_allow_html=True,
 )
 
@@ -283,12 +306,17 @@ with t_list:
         st.dataframe(
             view.assign(beds=[beds_label(a, b) for a, b in zip(view["beds_min"], view["beds_max"])]),
             hide_index=True, use_container_width=True, height=560,
-            column_order=["name", "manager", "status", "rent_per_bed_min", "rent_per_bed_max", "beds",
+            column_order=["name", "manager", "status", "rent_per_bed_min", "rent_per_bed_max",
+                          "fees_per_bed", "price_basis", "listed_price", "beds",
                           "miles", "walk_min", "bike_min", "available", "listing_type", "url"],
             column_config={
                 "name": "Property", "manager": "Manager", "status": "Status",
                 "rent_per_bed_min": st.column_config.NumberColumn("From $/bed", format="$%d"),
                 "rent_per_bed_max": st.column_config.NumberColumn("To $/bed", format="$%d"),
+                "fees_per_bed": st.column_config.NumberColumn("+ fees $/person", format="$%d"),
+                "price_basis": "How the price was worked out",
+                "listed_price": st.column_config.NumberColumn("Listed price (basis unknown)",
+                                                              format="$%d"),
                 "beds": "Bedrooms",
                 "miles": st.column_config.NumberColumn(f"Miles to {lm['short']}", format="%.2f"),
                 "walk_min": st.column_config.NumberColumn("Walk (min, est.)", format="%d"),
@@ -319,8 +347,7 @@ with t_list:
                 f'<div class="top"><span class="badge" style="background:{color}">'
                 f'{escape(r.manager)}</span><span class="dist">{dist}</span></div>'
                 f'<div class="name">{escape(str(r.name))}</div>'
-                f'<div class="price">{price_label(r.rent_per_bed_min, r.rent_per_bed_max)} '
-                f'<small>/ bed / month</small></div>'
+                f'{price_html(r)}'
                 f'<div class="meta">{beds_label(r.beds_min, r.beds_max)}{avail}</div>'
                 f'<div class="kind">{escape(r.listing_type)}{status}</div></a>')
         st.markdown('<div class="cards">' + "".join(cards) + "</div>", unsafe_allow_html=True)
@@ -484,8 +511,14 @@ property manager's public listings page, converts every price to **dollars per b
 and measures straight-line distance to campus landmarks.
 
 #### How to read it
-- **Per-bed price.** Whole-unit rents are split evenly across bedrooms (studios count as one).
-  Green Street Realty and JSM Living list per-person prices directly.
+- **Per-bed price, and how we got it.** Every listing says how its price was worked out:
+  *per person, as listed* (the manager prices by the bed), *whole-unit rent* (studios and
+  1-beds), or *estimate: unit rent ÷ bedrooms* (a whole apartment's rent split evenly; your
+  real share depends on how roommates split it). If a manager doesn't say whether a price is
+  per person or per unit, we show it as "Listed $X" and leave it out of per-bed comparisons.
+- **Fees.** Prices are base rent. Many managers add required monthly fees (utilities,
+  internet, trash, tech). Where a manager states them, we add them per person; otherwise
+  ask the manager.
 - **Whole building vs. unit.** Green Street Realty lists one price range per building; other
   managers list individual units or floor plans.
 - **Distance and walk time.** Straight-line miles. Walk/bike times assume streets add about

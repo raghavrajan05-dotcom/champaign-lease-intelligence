@@ -30,7 +30,10 @@ MAX_AGE_DAYS = 3            # fail if a manager's newest scrape is older than th
 # as SKIP instead of failing every run (an alert that always fires gets ignored).
 # Sources allowed more missing prices than MAX_MISSING_PRICE, with the reason.
 MISSING_PRICE_OK: dict[str, float] = {
-    "the-rive": 0.75,  # lists some open floor plans as "Call for pricing"
+    # Floor-plan prices are held back (kept as listed_price) until it's confirmed whether
+    # they are per person or per unit; see "per_person" in src/scrapers/floorplans.py.
+    "seven07": 1.0,
+    "the-rive": 1.0,
 }
 
 PAUSED: dict[str, str] = {

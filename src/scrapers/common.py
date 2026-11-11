@@ -7,6 +7,8 @@ Every scraper built on this writes the same "standard" columns, so one normalize
     rent_per_bed_min, rent_per_bed_max, rent_unit, status, available, url
 
 status is one of: Available, Last unit, Leased, Sold out, Unavailable.
+price_basis uses the BASIS_* labels in src/normalize.py; fees_per_bed and listed_price
+are optional (see that module's docstring).
 """
 
 from __future__ import annotations
@@ -24,6 +26,7 @@ USER_AGENT = os.getenv("USER_AGENT", "ChampaignLeaseIntel/0.1 (student research 
 STANDARD_FIELDS = [
     "manager", "external_id", "scraped_on", "name", "beds", "baths",
     "rent_per_bed_min", "rent_per_bed_max", "rent_unit", "status", "available", "url",
+    "price_basis", "fees_per_bed", "listed_price",
 ]
 MONEY_RE = re.compile(r"\$?\s*(\d[\d,]*(?:\.\d+)?)")
 
