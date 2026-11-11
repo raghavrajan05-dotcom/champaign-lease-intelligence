@@ -80,8 +80,8 @@ if not buildings.empty:
     b = buildings if max_miles == "Any" else buildings[buildings["miles_to_quad"] <= max_miles]
     st.subheader(f"{len(b)} more buildings, prices not listed")
     st.caption(
-        "Green Street Realty asked that its prices not be included here. "
-        "Their buildings are listed with distance to campus; see their site for prices and availability."
+        "These managers don't allow their prices to be shown here. "
+        "Their buildings are listed with distance to campus; see their sites for prices and availability."
     )
     st.dataframe(
         b.sort_values("miles_to_quad")[["manager", "name", "miles_to_quad", "url"]],
@@ -95,6 +95,7 @@ if not buildings.empty:
     )
 
 st.caption(
+    "Green Street Realty prices are per-bed ranges for a whole building (used with their permission). "
     "Community Property Management lists whole-unit rent; per-bed price here "
     "is that rent split evenly across bedrooms (studios count as one bed). "
     "Distances are straight-line miles to the center of the Main Quad. "

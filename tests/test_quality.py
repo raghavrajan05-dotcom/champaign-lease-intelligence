@@ -1,3 +1,5 @@
+from datetime import date
+
 import pandas as pd
 
 from src.normalize import from_jsm
@@ -21,7 +23,7 @@ def row(i, lo=800, hi=1000, name="Bldg"):
 
 
 def results(tmp_path):
-    checks = check_manager("jsm-living", from_jsm, str(tmp_path))
+    checks = check_manager("jsm-living", from_jsm, str(tmp_path), today=date(2026, 11, 10))
     return {c.name: c.passed for c in checks}
 
 
@@ -64,3 +66,8 @@ def test_paused_source_is_skipped_not_failed(tmp_path, monkeypatch):
     jsm = [c for c in results_ if c.manager == "jsm-living"]
     assert len(jsm) == 1 and jsm[0].skipped and jsm[0].passed
     assert "1 skipped" in quality.report(results_)
+
+
+def test_stale_scrape_fails(tmp_path):
+    write(tmp_path, "2026-11-01", [row(i) for i in range(10)])
+    assert results(tmp_path)["recent"] is False

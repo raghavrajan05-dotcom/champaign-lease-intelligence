@@ -14,6 +14,8 @@ import glob
 import os
 import sys
 from dataclasses import dataclass
+from datetime import date
+from pathlib import Path
 
 import pandas as pd
 
@@ -22,6 +24,7 @@ from src.normalize import COLUMNS, SOURCES
 MAX_COUNT_DROP = 0.5        # fail if listings fall by more than 50% vs the previous scrape
 MAX_MISSING_PRICE = 0.25    # fail if more than 25% of rows have no per-bed price
 RENT_PER_BED_RANGE = (200, 3000)  # $/bed/month outside this is almost surely a parsing error
+MAX_AGE_DAYS = 3            # fail if a manager's newest scrape is older than this (e.g. the laptop job stopped)
 
 # Sources deliberately not scraped right now, with the reason. They are reported
 # as SKIP instead of failing every run (an alert that always fires gets ignored).
@@ -47,7 +50,8 @@ def latest_two(prefix: str, data_dir: str = "data") -> tuple[str | None, str | N
     return newest, previous
 
 
-def check_manager(prefix: str, normalize, data_dir: str = "data") -> list[Check]:
+def check_manager(prefix: str, normalize, data_dir: str = "data",
+                  today: date | None = None) -> list[Check]:
     newest, previous = latest_two(prefix, data_dir)
     if newest is None:
         return [Check(prefix, "file exists", False, "no CSV found")]
@@ -55,6 +59,11 @@ def check_manager(prefix: str, normalize, data_dir: str = "data") -> list[Check]
     raw = pd.read_csv(newest)
     manager = raw["manager"].iloc[0] if len(raw) else prefix
     checks: list[Check] = []
+
+    # 0. Freshness: is the newest scrape recent? (file names end in _YYYY-MM-DD.csv)
+    scraped = date.fromisoformat(Path(newest).stem.rsplit("_", 1)[1])
+    age = ((today or date.today()) - scraped).days
+    checks.append(Check(manager, "recent", age <= MAX_AGE_DAYS, f"newest scrape {scraped} ({age} days old)"))
 
     # 1. Volume: did the scrape return anything, and not far fewer rows than last time?
     checks.append(Check(manager, "has rows", len(raw) > 0, f"{len(raw)} rows"))

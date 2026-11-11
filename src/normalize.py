@@ -38,6 +38,12 @@ def from_appfolio(df: pd.DataFrame) -> pd.DataFrame:
     return out[COLUMNS]
 
 
+def from_greenstreet(df: pd.DataFrame) -> pd.DataFrame:
+    """Green Street rows are buildings that already list per-bed price ranges."""
+    out = df.rename(columns={"available_raw": "available"})
+    return out[COLUMNS]
+
+
 def from_jsm(df: pd.DataFrame) -> pd.DataFrame:
     """JSM rows are unit types. Use JSM's per-person price when listed;
     otherwise split the unit price evenly by bed (studios count as 1 bed)."""
@@ -60,11 +66,12 @@ def from_jsm(df: pd.DataFrame) -> pd.DataFrame:
 
 SOURCES = {
     "community-property-management": from_appfolio,
+    "green-street-realty": from_greenstreet,
     "jsm-living": from_jsm,
 }
 
-# Buildings shown WITHOUT prices: their manager declined to let us use price data,
-# so only the building's address and a link to the manager's site are listed.
+# Buildings shown WITHOUT prices, e.g. when a manager doesn't allow price data:
+# only the building's address and a link to the manager's site are listed.
 # A fixed list (not scraped daily). Columns: manager, name, url, listed_as_of.
 UNPRICED_PATH = Path(__file__).resolve().parents[1] / "reference" / "unpriced_buildings.csv"
 

@@ -20,6 +20,7 @@ from src.normalize import load_all
 OUT_PATH = Path("exports/listings_for_tableau.csv")
 BANDS = [(0.5, "Under 0.5 mi"), (1.0, "0.5-1 mi"), (2.0, "1-2 mi"), (float("inf"), "2+ mi")]
 LISTING_TYPE = {
+    "Green Street Realty": "Building (price range)",
     "JSM Living": "Unit type",
     "Community Property Management": "Single unit",
 }
