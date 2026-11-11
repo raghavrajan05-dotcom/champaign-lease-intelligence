@@ -1,0 +1,249 @@
+manager,external_id,scraped_on,name,rent_per_bed_min,rent_per_bed_max,rent_per_unit_min,rent_per_unit_max,beds_min,beds_max,baths_min,baths_max,available_raw,url
+Green Street Realty,105-e-armory-ave,2026-11-11,105 E Armory Ave,800.0,1150.0,1800.0,4200.0,1,4,1.0,4.0,Now,https://www.greenstrealty.com/properties/profile/105-e-armory-ave
+Green Street Realty,54-e-chalmers-st,2026-11-11,54 E Chalmers St,750.0,900.0,3400.0,3600.0,1,4,1.0,2.0,Now,https://www.greenstrealty.com/properties/profile/54-e-chalmers-st
+Green Street Realty,11-e-columbia,2026-11-11,11 E Columbia,650.0,1250.0,1250.0,1300.0,1,2,1.0,1.0,Now,https://www.greenstrealty.com/properties/profile/11-e-columbia
+Green Street Realty,122-w-hill-st,2026-11-11,122 W Hill St,748.0,1350.0,1350.0,1795.0,1,2,1.0,2.0,Now,https://www.greenstrealty.com/properties/profile/122-w-hill-st
+Green Street Realty,32-e-green-st,2026-11-11,32 E Green St,900.0,1138.0,2200.0,3700.0,2,4,2.0,4.0,,https://www.greenstrealty.com/properties/profile/32-e-green-st
+Green Street Realty,609-s-randolph-st,2026-11-11,609 S Randolph St,700.0,825.0,1250.0,1650.0,2,2,1.0,2.0,Now,https://www.greenstrealty.com/properties/profile/609-s-randolph-st
+Green Street Realty,804-n-neil-st,2026-11-11,804 N Neil St,950.0,2200.0,1400.0,2200.0,1,2,1.0,2.5,Now,https://www.greenstrealty.com/properties/profile/804-n-neil-st
+Green Street Realty,905-e-oak-st,2026-11-11,905 E Oak St,,,1425.0,1959.0,1,3,1.0,2.0,Now,https://www.greenstrealty.com/properties/profile/905-e-oak-st
+Green Street Realty,112-e-john-st,2026-11-11,112 E John St,1033.0,1150.0,1500.0,4200.0,4,4,1.0,3.0,,https://www.greenstrealty.com/properties/profile/112-e-john-st
+Green Street Realty,6-e-main-st,2026-11-11,6 E Main St,1425.0,1425.0,1425.0,2600.0,1,2,1.0,2.0,,https://www.greenstrealty.com/properties/profile/6-e-main-st
+Green Street Realty,901-s-second-st,2026-11-11,901 S Second St,700.0,863.0,3200.0,3450.0,1,4,1.0,2.0,Now,https://www.greenstrealty.com/properties/profile/901-s-second-st
+Green Street Realty,stoneway-condos,2026-11-11,Stoneway Condos,665.0,665.0,1995.0,1995.0,3,3,2.5,2.5,,https://www.greenstrealty.com/properties/profile/stoneway-condos
+Green Street Realty,27-e-taylor-st,2026-11-11,27 E Taylor St,1450.0,1450.0,1450.0,1450.0,1,1,1.0,1.0,August 2026,https://www.greenstrealty.com/properties/profile/27-e-taylor-st
+Green Street Realty,309-e-springfield-ave,2026-11-11,309 E Springfield Ave,1000.0,1175.0,1525.0,4200.0,4,4,1.0,4.0,,https://www.greenstrealty.com/properties/profile/309-e-springfield-ave
+Green Street Realty,901-s-fourth-st,2026-11-11,901 S Fourth St,900.0,1200.0,1700.0,3050.0,1,3,1.0,2.0,Now,https://www.greenstrealty.com/properties/profile/901-s-fourth-st
+Green Street Realty,907-s-third-st,2026-11-11,907 S Third St,700.0,1000.0,2000.0,3450.0,1,4,1.0,2.0,Now,https://www.greenstrealty.com/properties/profile/907-s-third-st
+Green Street Realty,502-e-springfield-ave,2026-11-11,502 E Springfield Ave,798.0,808.0,2395.0,2425.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/502-e-springfield-ave
+Green Street Realty,711-s-fourth-st,2026-11-11,711 S Fourth St,1075.0,1300.0,1595.0,4500.0,4,4,1.0,4.0,,https://www.greenstrealty.com/properties/profile/711-s-fourth-st
+Green Street Realty,1007-w-university-ave,2026-11-11,1007 W University Ave,800.0,1075.0,1600.0,3500.0,1,4,1.0,4.0,,https://www.greenstrealty.com/properties/profile/1007-w-university-ave
+Green Street Realty,809-w-nevada-st,2026-11-11,809 W Nevada St,875.0,900.0,2700.0,3550.0,3,4,2.0,3.0,,https://www.greenstrealty.com/properties/profile/809-w-nevada-st
+Green Street Realty,802-w-oregon,2026-11-11,802 W Oregon,600.0,800.0,1425.0,1800.0,1,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/802-w-oregon
+Green Street Realty,603-s-busey,2026-11-11,603 S Busey,,,1395.0,1395.0,1,1,1.0,1.0,,https://www.greenstrealty.com/properties/profile/603-s-busey
+Green Street Realty,711-w-elm-st,2026-11-11,711 W Elm St,450.0,600.0,1800.0,1800.0,3,4,2.0,2.0,,https://www.greenstrealty.com/properties/profile/711-w-elm-st
+Green Street Realty,1-oneil-ct,2026-11-11,1 Oneil Ct,,,925.0,925.0,2,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/1-oneil-ct
+Green Street Realty,1001-s-pine,2026-11-11,1001 S Pine,,,1350.0,1350.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/1001-s-pine
+Green Street Realty,1005-devonshire-dr,2026-11-11,1005 Devonshire Dr,532.0,532.0,1595.0,1595.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/1005-devonshire-dr
+Green Street Realty,1005-s-first-st,2026-11-11,1005 S First St,,,1025.0,1050.0,,,1.0,1.0,,https://www.greenstrealty.com/properties/profile/1005-s-first-st
+Green Street Realty,1005-s-oak-st,2026-11-11,1005 S Oak St,900.0,900.0,9000.0,9000.0,5,,5.0,5.0,,https://www.greenstrealty.com/properties/profile/1005-s-oak-st
+Green Street Realty,1006-s-prairie-st,2026-11-11,1006 S Prairie St,,,925.0,925.0,2,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/1006-s-prairie-st
+Green Street Realty,1007-s-locust-st,2026-11-11,1007 S Locust St,600.0,800.0,1350.0,2800.0,1,4,1.0,2.0,,https://www.greenstrealty.com/properties/profile/1007-s-locust-st
+Green Street Realty,1008-s-fourth-st,2026-11-11,1008 S Fourth St,925.0,1250.0,1525.0,4200.0,4,4,1.0,4.0,Now,https://www.greenstrealty.com/properties/profile/1008-s-fourth-st
+Green Street Realty,1009-s-first-st,2026-11-11,1009 S First St,480.0,600.0,1750.0,2400.0,5,,1.5,2.0,,https://www.greenstrealty.com/properties/profile/1009-s-first-st
+Green Street Realty,101-e-daniel-st,2026-11-11,101 E Daniel St,600.0,698.0,1300.0,2400.0,1,4,1.0,2.0,,https://www.greenstrealty.com/properties/profile/101-e-daniel-st
+Green Street Realty,101-e-green-st,2026-11-11,101 E Green St,525.0,748.0,1400.0,2800.0,1,4,1.0,1.5,Now,https://www.greenstrealty.com/properties/profile/101-e-green-st
+Green Street Realty,1011-w-stoughton-st,2026-11-11,1011 W Stoughton St,600.0,700.0,2100.0,2400.0,3,4,1.0,2.0,,https://www.greenstrealty.com/properties/profile/1011-w-stoughton-st
+Green Street Realty,102-n-gregory-st,2026-11-11,102 N Gregory St,575.0,575.0,850.0,1150.0,2,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/102-n-gregory-st
+Green Street Realty,102-s-lincoln-ave,2026-11-11,102 S Lincoln Ave,550.0,633.0,1250.0,2200.0,2,4,1.0,2.0,,https://www.greenstrealty.com/properties/profile/102-s-lincoln-ave
+Green Street Realty,103-e-john-st,2026-11-11,103 E John St,925.0,1000.0,1875.0,3700.0,2,4,2.0,4.0,,https://www.greenstrealty.com/properties/profile/103-e-john-st
+Green Street Realty,103-e-healey-st,2026-11-11,103 E Healey St,975.0,1000.0,1350.0,2000.0,2,2,1.0,2.0,,https://www.greenstrealty.com/properties/profile/103-e-healey-st
+Green Street Realty,103-portsmouth-7,2026-11-11,103 Portsmouth 7,750.0,750.0,1500.0,1500.0,2,2,2.0,2.0,,https://www.greenstrealty.com/properties/profile/103-portsmouth-7
+Green Street Realty,104-e-john-st,2026-11-11,104 E John St,875.0,1000.0,1625.0,3700.0,1,4,1.0,3.0,,https://www.greenstrealty.com/properties/profile/104-e-john-st
+Green Street Realty,105-s-fourth-st,2026-11-11,105 S Fourth St,663.0,663.0,900.0,1325.0,1,2,1.0,1.0,Now,https://www.greenstrealty.com/properties/profile/105-s-fourth-st
+Green Street Realty,106-e-armory-ave,2026-11-11,106 E Armory Ave,900.0,1017.0,1450.0,3700.0,4,4,1.0,3.0,,https://www.greenstrealty.com/properties/profile/106-e-armory-ave
+Green Street Realty,106-s-coler,2026-11-11,106 S Coler,575.0,575.0,1725.0,1725.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/106-s-coler
+Green Street Realty,107-n-walnut-st,2026-11-11,107 N Walnut St,500.0,650.0,1300.0,1500.0,2,3,2.0,2.0,Now,https://www.greenstrealty.com/properties/profile/107-n-walnut-st
+Green Street Realty,108-e-daniel-st,2026-11-11,108 E Daniel St,900.0,1025.0,2050.0,3700.0,2,4,2.0,3.0,,https://www.greenstrealty.com/properties/profile/108-e-daniel-st
+Green Street Realty,108-w-green-st,2026-11-11,108 W Green St,,,750.0,825.0,1,1,1.0,1.0,,https://www.greenstrealty.com/properties/profile/108-w-green-st
+Green Street Realty,1106-s-euclid-st,2026-11-11,1106 S Euclid St,750.0,775.0,3000.0,3100.0,1,4,1.0,2.0,Now,https://www.greenstrealty.com/properties/profile/1106-s-euclid-st
+Green Street Realty,1106-w-stoughton,2026-11-11,1106 W Stoughton,838.0,838.0,1225.0,1675.0,1,2,1.0,1.5,,https://www.greenstrealty.com/properties/profile/1106-w-stoughton
+Green Street Realty,1107-broadmoor-dr,2026-11-11,1107 Broadmoor Dr,483.0,483.0,1450.0,1450.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/1107-broadmoor-dr
+Green Street Realty,1109-w-stoughton,2026-11-11,1109 W Stoughton,675.0,700.0,2500.0,2800.0,4,4,2.0,2.0,Now,https://www.greenstrealty.com/properties/profile/1109-w-stoughton
+Green Street Realty,111-s-busey-ave,2026-11-11,111 S Busey Ave,533.0,533.0,995.0,1550.0,1,3,1.0,2.0,,https://www.greenstrealty.com/properties/profile/111-s-busey-ave
+Green Street Realty,1305-w-columbia-ave,2026-11-11,1305 W Columbia Ave,,,895.0,895.0,2,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/1305-w-columbia-ave
+Green Street Realty,1401-hollycrest-dr,2026-11-11,1401 Hollycrest Dr,,,1350.0,1350.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/1401-hollycrest-dr
+Green Street Realty,1415-cambridge,2026-11-11,1415 Cambridge,,,1250.0,1250.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/1415-cambridge
+Green Street Realty,15-e-taylor-st-2,2026-11-11,15 E Taylor St 2,825.0,1350.0,1350.0,1650.0,1,2,1.0,2.0,,https://www.greenstrealty.com/properties/profile/15-e-taylor-st-2
+Green Street Realty,1503-dawson-drive,2026-11-11,1503 Dawson Drive,,,1595.0,1595.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/1503-dawson-drive
+Green Street Realty,1507-w-john-st,2026-11-11,1507 W John St,375.0,375.0,1500.0,1500.0,4,4,2.0,2.0,,https://www.greenstrealty.com/properties/profile/1507-w-john-st
+Green Street Realty,1517-w-green,2026-11-11,1517 W Green,598.0,598.0,1795.0,1795.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/1517-w-green
+Green Street Realty,1604-normandy-dr,2026-11-11,1604 Normandy Dr,,,,,1,1,1.0,1.0,,https://www.greenstrealty.com/properties/profile/1604-normandy-dr
+Green Street Realty,1706-w-white-st,2026-11-11,1706 W White St,,,1100.0,1100.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/1706-w-white-st
+Green Street Realty,1714-crescent-drive,2026-11-11,1714 Crescent Drive,532.0,532.0,1595.0,1595.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/1714-crescent-drive
+Green Street Realty,1717-coronado-drive,2026-11-11,1717 Coronado Drive,517.0,517.0,1550.0,1550.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/1717-coronado-drive
+Green Street Realty,1727-henry-st,2026-11-11,1727 Henry St,450.0,450.0,900.0,900.0,2,2,1.0,1.0,Now,https://www.greenstrealty.com/properties/profile/1727-henry-st
+Green Street Realty,1727-park-haven-drive,2026-11-11,1727 Park Haven Drive,,,,,1,1,1.0,1.0,,https://www.greenstrealty.com/properties/profile/1727-park-haven-drive
+Green Street Realty,1728-park-haven,2026-11-11,1728 Park Haven,567.0,567.0,1700.0,1700.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/1728-park-haven
+Green Street Realty,1803-park-haven,2026-11-11,1803 Park Haven,533.0,533.0,1600.0,1600.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/1803-park-haven
+Green Street Realty,1804-park-haven,2026-11-11,1804 Park Haven,525.0,525.0,1575.0,1575.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/1804-park-haven
+Green Street Realty,1806-park-haven-drive,2026-11-11,1806 Park Haven Drive,608.0,608.0,1825.0,1825.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/1806-park-haven-drive
+Green Street Realty,1807-meadow-dr,2026-11-11,1807 Meadow Dr,483.0,483.0,1450.0,1450.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/1807-meadow-dr
+Green Street Realty,1808-park-haven-dr,2026-11-11,1808 Park Haven Dr,,,1375.0,1375.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/1808-park-haven-dr
+Green Street Realty,1809-sadler-dr,2026-11-11,1809 Sadler Dr,583.0,583.0,1750.0,1750.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/1809-sadler-dr
+Green Street Realty,1811-sadler-dr,2026-11-11,1811 Sadler Dr,725.0,725.0,1450.0,1450.0,2,2,2.0,2.0,,https://www.greenstrealty.com/properties/profile/1811-sadler-dr
+Green Street Realty,1819-sadler-dr,2026-11-11,1819 Sadler Dr,583.0,583.0,1750.0,1750.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/1819-sadler-dr
+Green Street Realty,1908-galen-dr,2026-11-11,1908 Galen Dr,508.0,508.0,1525.0,1525.0,3,3,1.5,1.5,,https://www.greenstrealty.com/properties/profile/1908-galen-dr
+Green Street Realty,200-s-vine-st,2026-11-11,200 S Vine St,733.0,798.0,1595.0,2350.0,2,3,2.0,2.5,Now,https://www.greenstrealty.com/properties/profile/200-s-vine-st
+Green Street Realty,2003-broadmoor-dr,2026-11-11,2003 Broadmoor Dr,,,1500.0,1500.0,3,3,1.5,1.5,Now,https://www.greenstrealty.com/properties/profile/2003-broadmoor-dr
+Green Street Realty,201-s-busey-ave,2026-11-11,201 S Busey Ave,600.0,600.0,995.0,1200.0,1,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/201-s-busey-ave
+Green Street Realty,201-w-green-st,2026-11-11,201 W Green St,900.0,900.0,1350.0,1800.0,1,2,1.0,2.0,,https://www.greenstrealty.com/properties/profile/201-w-green-st
+Green Street Realty,2017-southwood-dr,2026-11-11,2017 Southwood Dr,,,1325.0,1325.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/2017-southwood-dr
+Green Street Realty,202-e-springfield-ave,2026-11-11,202 E Springfield Ave,,,925.0,925.0,1,1,1.0,1.0,,https://www.greenstrealty.com/properties/profile/202-e-springfield-ave
+Green Street Realty,202-e-white-st,2026-11-11,202 E White St,467.0,788.0,1400.0,2700.0,1,4,1.0,2.0,Now,https://www.greenstrealty.com/properties/profile/202-e-white-st
+Green Street Realty,204-e-clark-st,2026-11-11,204 E Clark St,617.0,738.0,1150.0,1850.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/204-e-clark-st
+Green Street Realty,204-n-neil-st-unit-b-1,2026-11-11,204 N Neil St Unit B 1,750.0,750.0,3000.0,3000.0,4,4,4.5,4.5,,https://www.greenstrealty.com/properties/profile/204-n-neil-st-unit-b-1
+Green Street Realty,204-s-fifth-st,2026-11-11,204 S Fifth St,908.0,938.0,1875.0,2800.0,2,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/204-s-fifth-st
+Green Street Realty,204-w-william-st,2026-11-11,204 W William St,450.0,450.0,1350.0,1350.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/204-w-william-st
+Green Street Realty,205-e-healey-st,2026-11-11,205 E Healey St,,,950.0,1175.0,1,1,1.0,1.0,,https://www.greenstrealty.com/properties/profile/205-e-healey-st
+Green Street Realty,205-stanage-ave,2026-11-11,205 Stanage Ave,433.0,433.0,1300.0,1300.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/205-stanage-ave
+Green Street Realty,208-e-clark-st,2026-11-11,208 E Clark St,817.0,950.0,1425.0,2600.0,1,3,1.0,3.0,,https://www.greenstrealty.com/properties/profile/208-e-clark-st
+Green Street Realty,208-e-white-st,2026-11-11,208 E White St,583.0,775.0,1550.0,1750.0,2,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/208-e-white-st
+Green Street Realty,209-e-clark-st,2026-11-11,209 E Clark St,688.0,688.0,1375.0,1375.0,2,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/209-e-clark-st
+Green Street Realty,209-e-university-ave,2026-11-11,209 E University Ave,675.0,863.0,1200.0,3200.0,4,4,1.0,2.0,Now,https://www.greenstrealty.com/properties/profile/209-e-university-ave
+Green Street Realty,209-w-ells,2026-11-11,209 W Ells,,,900.0,900.0,1,1,1.0,1.0,,https://www.greenstrealty.com/properties/profile/209-w-ells
+Green Street Realty,209-w-griggs,2026-11-11,209 W Griggs,663.0,663.0,1050.0,1325.0,1,2,1.0,2.0,,https://www.greenstrealty.com/properties/profile/209-w-griggs
+Green Street Realty,210-e-white-st,2026-11-11,210 E White St,583.0,788.0,1575.0,1750.0,2,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/210-e-white-st
+Green Street Realty,211-e-clark-st,2026-11-11,211 E Clark St,475.0,600.0,1200.0,2000.0,2,4,1.0,2.0,,https://www.greenstrealty.com/properties/profile/211-e-clark-st
+Green Street Realty,212-e-white-st,2026-11-11,212 E White St,,,1350.0,1350.0,1,1,1.0,1.0,,https://www.greenstrealty.com/properties/profile/212-e-white-st
+Green Street Realty,213-w-green-st,2026-11-11,213 W Green St,900.0,900.0,1375.0,1800.0,1,2,1.0,2.0,,https://www.greenstrealty.com/properties/profile/213-w-green-st
+Green Street Realty,2203-belmore-drive,2026-11-11,2203 Belmore Drive,517.0,517.0,1550.0,1550.0,3,3,1.5,1.5,,https://www.greenstrealty.com/properties/profile/2203-belmore-drive
+Green Street Realty,2403-hathaway,2026-11-11,2403 Hathaway,,,1375.0,1375.0,3,3,1.5,1.5,,https://www.greenstrealty.com/properties/profile/2403-hathaway
+Green Street Realty,2702-southwood-dr,2026-11-11,2702 Southwood Dr,583.0,583.0,1750.0,1750.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/2702-southwood-dr
+Green Street Realty,2804-southwood-dr,2026-11-11,2804 Southwood Dr,,,1700.0,1700.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/2804-southwood-dr
+Green Street Realty,2906-s-myra-ridge-dr,2026-11-11,2906 S Myra Ridge Dr,550.0,550.0,1650.0,1650.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/2906-s-myra-ridge-dr
+Green Street Realty,3001-w-daniel-st,2026-11-11,3001 W Daniel St,483.0,483.0,1450.0,1450.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/3001-w-daniel-st
+Green Street Realty,301-e-clark-st,2026-11-11,301 E Clark St,748.0,748.0,1295.0,1495.0,1,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/301-e-clark-st
+Green Street Realty,301-e-white-st,2026-11-11,301 E White St,613.0,736.0,1225.0,1475.0,1,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/301-e-white-st
+Green Street Realty,301-s-fourth-st-1,2026-11-11,301 S Fourth St 1,763.0,763.0,1525.0,1525.0,2,2,2.0,2.0,,https://www.greenstrealty.com/properties/profile/301-s-fourth-st-1
+Green Street Realty,301-w-green-st,2026-11-11,301 W Green St,,,995.0,995.0,1,1,1.0,1.0,,https://www.greenstrealty.com/properties/profile/301-w-green-st
+Green Street Realty,302-s-second-st,2026-11-11,302 S Second St,667.0,725.0,1125.0,2000.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/302-s-second-st
+Green Street Realty,302-s-state-st,2026-11-11,302 S State St,625.0,1050.0,625.0,1050.0,1,1,1.0,1.0,,https://www.greenstrealty.com/properties/profile/302-s-state-st
+Green Street Realty,302-w-stanage-ave,2026-11-11,302 W Stanage Ave,483.0,483.0,1450.0,1450.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/302-w-stanage-ave
+Green Street Realty,303-e-white-st,2026-11-11,303 E White St,,,1200.0,1200.0,1,1,1.0,1.0,,https://www.greenstrealty.com/properties/profile/303-e-white-st
+Green Street Realty,303-w-green-st,2026-11-11,303 W Green St,525.0,663.0,1150.0,1600.0,1,3,1.0,2.0,,https://www.greenstrealty.com/properties/profile/303-w-green-st
+Green Street Realty,304-e-clark-st,2026-11-11,304 E Clark St,550.0,600.0,2200.0,2200.0,1,4,1.0,2.0,Now,https://www.greenstrealty.com/properties/profile/304-e-clark-st
+Green Street Realty,304-s-mattis-ave,2026-11-11,304 S Mattis Ave,550.0,550.0,1650.0,1650.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/304-s-mattis-ave
+Green Street Realty,304-s-state-st,2026-11-11,304 S State St,895.0,895.0,895.0,895.0,1,1,1.0,1.0,,https://www.greenstrealty.com/properties/profile/304-s-state-st
+Green Street Realty,305-e-green-st,2026-11-11,305 E Green St,467.0,600.0,1400.0,1800.0,3,3,1.5,1.5,Now,https://www.greenstrealty.com/properties/profile/305-e-green-st
+Green Street Realty,305-e-white-st,2026-11-11,305 E White St,450.0,895.0,895.0,1350.0,1,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/305-e-white-st
+Green Street Realty,305-s-fifth-st,2026-11-11,305 S Fifth St,900.0,900.0,9000.0,9000.0,5,,5.0,5.0,,https://www.greenstrealty.com/properties/profile/305-s-fifth-st
+Green Street Realty,305-w-clark-st,2026-11-11,305 W Clark St,825.0,1250.0,1250.0,1700.0,1,2,1.0,2.0,Now,https://www.greenstrealty.com/properties/profile/305-w-clark-st
+Green Street Realty,305-w-elm-st,2026-11-11,305 W Elm St,548.0,548.0,1095.0,1095.0,2,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/305-w-elm-st
+Green Street Realty,306-e-clark-st,2026-11-11,306 E Clark St,433.0,767.0,1050.0,2300.0,3,3,1.0,2.0,Now,https://www.greenstrealty.com/properties/profile/306-e-clark-st
+Green Street Realty,306-e-green-st,2026-11-11,306 E Green St,617.0,617.0,1850.0,1850.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/306-e-green-st
+Green Street Realty,306-s-second-st,2026-11-11,306 S Second St,950.0,1550.0,1495.0,4000.0,4,4,1.0,4.0,,https://www.greenstrealty.com/properties/profile/306-s-second-st
+Green Street Realty,306-s-fifth-st,2026-11-11,306 S Fifth St,875.0,875.0,,,5,,5.0,5.0,,https://www.greenstrealty.com/properties/profile/306-s-fifth-st
+Green Street Realty,307-e-daniel-st,2026-11-11,307 E Daniel St,1075.0,1088.0,4300.0,4350.0,4,4,4.0,4.0,,https://www.greenstrealty.com/properties/profile/307-e-daniel-st
+Green Street Realty,307-flora-dr,2026-11-11,307 Flora Dr,,,1200.0,1200.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/307-flora-dr
+Green Street Realty,307-w-green,2026-11-11,307 W Green,600.0,600.0,4200.0,4200.0,5,,5.0,5.0,,https://www.greenstrealty.com/properties/profile/307-w-green
+Green Street Realty,308-s-fifth-st,2026-11-11,308 S Fifth St,875.0,875.0,12250.0,12250.0,5,,5.0,5.0,,https://www.greenstrealty.com/properties/profile/308-s-fifth-st
+Green Street Realty,308-e-clark-st,2026-11-11,308 E Clark St,900.0,900.0,3600.0,7200.0,5,,2.5,5.0,,https://www.greenstrealty.com/properties/profile/308-e-clark-st
+Green Street Realty,309-e-daniel-st,2026-11-11,309 E Daniel St,525.0,667.0,2000.0,2100.0,3,4,1.0,1.0,,https://www.greenstrealty.com/properties/profile/309-e-daniel-st
+Green Street Realty,309-stanage,2026-11-11,309 Stanage,433.0,433.0,1300.0,1300.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/309-stanage
+Green Street Realty,310-e-clark-st,2026-11-11,310 E Clark St,,,1200.0,1200.0,1,1,1.0,1.0,,https://www.greenstrealty.com/properties/profile/310-e-clark-st
+Green Street Realty,311-e-daniel-st,2026-11-11,311 E Daniel St,525.0,667.0,2000.0,2100.0,3,4,1.0,1.0,,https://www.greenstrealty.com/properties/profile/311-e-daniel-st
+Green Street Realty,312-e-white-st,2026-11-11,312 E White St,575.0,575.0,675.0,1750.0,3,3,1.0,1.5,,https://www.greenstrealty.com/properties/profile/312-e-white-st
+Green Street Realty,313-stanage-ave,2026-11-11,313 Stanage Ave,465.0,465.0,1395.0,1395.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/313-stanage-ave
+Green Street Realty,314-e-white-st,2026-11-11,314 E White St,900.0,938.0,1875.0,2800.0,2,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/314-e-white-st
+Green Street Realty,32-e-chester-st,2026-11-11,32 E Chester St,1550.0,1550.0,1550.0,1550.0,1,1,1.0,1.0,,https://www.greenstrealty.com/properties/profile/32-e-chester-st
+Green Street Realty,320-n-neil-st,2026-11-11,320 N Neil St,900.0,900.0,1800.0,1800.0,2,2,2.0,2.0,Now,https://www.greenstrealty.com/properties/profile/320-n-neil-st
+Green Street Realty,325-n-fair-st,2026-11-11,325 N Fair St,450.0,450.0,1350.0,1350.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/325-n-fair-st
+Green Street Realty,3301-fields-south-dr,2026-11-11,3301 Fields South Dr,788.0,1425.0,1425.0,1675.0,1,2,1.0,2.0,August 2026,https://www.greenstrealty.com/properties/profile/3301-fields-south-dr
+Green Street Realty,3302-mission-dr,2026-11-11,3302 Mission Dr,717.0,1425.0,1425.0,2150.0,1,3,1.0,2.0,,https://www.greenstrealty.com/properties/profile/3302-mission-dr
+Green Street Realty,3401-fields-south-dr,2026-11-11,3401 Fields South Dr,788.0,838.0,1350.0,1675.0,1,2,1.0,2.0,,https://www.greenstrealty.com/properties/profile/3401-fields-south-dr
+Green Street Realty,3402-mission-dr,2026-11-11,3402 Mission Dr,717.0,1425.0,1425.0,2150.0,1,3,1.0,2.0,,https://www.greenstrealty.com/properties/profile/3402-mission-dr
+Green Street Realty,4-oneil-ct,2026-11-11,4 Oneil Ct,525.0,525.0,1050.0,1050.0,2,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/4-oneil-ct
+Green Street Realty,402-408-w-church-st,2026-11-11,402 408 W Church St,898.0,1250.0,1250.0,1795.0,2,2,1.0,2.0,Now,https://www.greenstrealty.com/properties/profile/402-408-w-church-st
+Green Street Realty,405-e-white-st,2026-11-11,405 E White St,675.0,675.0,950.0,1425.0,2,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/405-e-white-st
+Green Street Realty,406-e-stoughton,2026-11-11,406 E Stoughton,798.0,798.0,1595.0,1595.0,2,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/406-e-stoughton
+Green Street Realty,406-n-randolph-st,2026-11-11,406 N Randolph St,463.0,1000.0,900.0,1000.0,1,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/406-n-randolph-st
+Green Street Realty,407-s-state-st,2026-11-11,407 S State St,525.0,995.0,800.0,1050.0,2,2,1.0,1.0,Now,https://www.greenstrealty.com/properties/profile/407-s-state-st
+Green Street Realty,408-e-clark-st,2026-11-11,408 E Clark St,,,995.0,995.0,1,1,1.0,1.0,,https://www.greenstrealty.com/properties/profile/408-e-clark-st
+Green Street Realty,410-e-stoughton,2026-11-11,410 E Stoughton,850.0,850.0,,,5,,5.0,5.0,,https://www.greenstrealty.com/properties/profile/410-e-stoughton
+Green Street Realty,501-e-university-ave,2026-11-11,501 E University Ave,833.0,938.0,1850.0,2600.0,2,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/501-e-university-ave
+Green Street Realty,501-s-sixth-st,2026-11-11,501 S Sixth St,800.0,1075.0,2100.0,4800.0,5,,1.0,4.0,Now,https://www.greenstrealty.com/properties/profile/501-s-sixth-st
+Green Street Realty,502-e-stoughton-st,2026-11-11,502 E Stoughton St,875.0,875.0,,,5,,5.0,5.0,,https://www.greenstrealty.com/properties/profile/502-e-stoughton-st
+Green Street Realty,503-e-springfield-ave,2026-11-11,503 E Springfield Ave,775.0,775.0,1300.0,1550.0,1,2,1.0,2.0,,https://www.greenstrealty.com/properties/profile/503-e-springfield-ave
+Green Street Realty,504-e-white-st,2026-11-11,504 E White St,,,975.0,975.0,,,1.0,1.0,,https://www.greenstrealty.com/properties/profile/504-e-white-st
+Green Street Realty,505-e-stoughton-st,2026-11-11,505 E Stoughton St,800.0,800.0,2400.0,2400.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/505-e-stoughton-st
+Green Street Realty,505-s-fourth-st,2026-11-11,505 S Fourth St,775.0,800.0,1275.0,1600.0,1,2,1.0,2.0,,https://www.greenstrealty.com/properties/profile/505-s-fourth-st
+Green Street Realty,505-s-second-st,2026-11-11,505 S Second St,900.0,900.0,,3600.0,5,,4.0,5.0,,https://www.greenstrealty.com/properties/profile/505-s-second-st
+Green Street Realty,506-w-griggs-st,2026-11-11,506 W Griggs St,,,850.0,850.0,1,1,1.0,1.0,,https://www.greenstrealty.com/properties/profile/506-w-griggs-st
+Green Street Realty,506-w-healey-st,2026-11-11,506 W Healey St,475.0,475.0,950.0,950.0,2,2,1.0,1.0,Now,https://www.greenstrealty.com/properties/profile/506-w-healey-st
+Green Street Realty,508-e-clark-st,2026-11-11,508 E Clark St,550.0,750.0,1100.0,2800.0,1,4,1.0,2.0,Now,https://www.greenstrealty.com/properties/profile/508-e-clark-st
+Green Street Realty,508-e-stoughton-st,2026-11-11,508 E Stoughton St,775.0,775.0,1200.0,1550.0,1,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/508-e-stoughton-st
+Green Street Realty,508-s-first-st,2026-11-11,508 S First St,650.0,1100.0,1050.0,2600.0,4,4,1.0,2.0,,https://www.greenstrealty.com/properties/profile/508-s-first-st
+Green Street Realty,508-w-griggs-st,2026-11-11,508 W Griggs St,,,850.0,850.0,1,1,1.0,1.0,,https://www.greenstrealty.com/properties/profile/508-w-griggs-st
+Green Street Realty,509-e-clark,2026-11-11,509 E Clark,,,1125.0,1125.0,,,1.0,1.0,,https://www.greenstrealty.com/properties/profile/509-e-clark
+Green Street Realty,509-s-elm-st,2026-11-11,509 S Elm St,700.0,825.0,1400.0,1650.0,2,2,2.0,2.0,Now,https://www.greenstrealty.com/properties/profile/509-s-elm-st
+Green Street Realty,509-w-main-st,2026-11-11,509 W Main St,,,895.0,895.0,1,1,1.0,1.0,,https://www.greenstrealty.com/properties/profile/509-w-main-st
+Green Street Realty,51-e-green-st,2026-11-11,51 E Green St,750.0,825.0,1450.0,3300.0,1,4,1.0,2.5,,https://www.greenstrealty.com/properties/profile/51-e-green-st
+Green Street Realty,511-breen-dr,2026-11-11,511 Breen Dr,550.0,550.0,1650.0,1650.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/511-breen-dr
+Green Street Realty,512-breen-dr,2026-11-11,512 Breen Dr,,,1325.0,1325.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/512-breen-dr
+Green Street Realty,512-e-church-st,2026-11-11,512 E Church St,,,950.0,950.0,1,1,1.0,1.0,,https://www.greenstrealty.com/properties/profile/512-e-church-st
+Green Street Realty,515-bash-ct,2026-11-11,515 Bash Ct,600.0,767.0,1800.0,2300.0,3,3,1.5,1.5,Now,https://www.greenstrealty.com/properties/profile/515-bash-ct
+Green Street Realty,52-e-green-st,2026-11-11,52 E Green St,800.0,833.0,2400.0,2500.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/52-e-green-st
+Green Street Realty,54-e-green,2026-11-11,54 E Green,720.0,720.0,3600.0,3600.0,5,,2.5,2.5,,https://www.greenstrealty.com/properties/profile/54-e-green
+Green Street Realty,54-e-john-st,2026-11-11,54 E John St,,,1350.0,1495.0,1,1,1.0,1.0,,https://www.greenstrealty.com/properties/profile/54-e-john-st
+Green Street Realty,55-e-healey,2026-11-11,55 E Healey,650.0,650.0,1300.0,1300.0,2,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/55-e-healey
+Green Street Realty,55-e-green-st,2026-11-11,55 E Green St,900.0,1050.0,1550.0,3600.0,1,4,1.0,4.0,,https://www.greenstrealty.com/properties/profile/55-e-green-st
+Green Street Realty,56-1-2-e-green-st,2026-11-11,56 1 2 E Green St,,,1225.0,1225.0,1,1,1.0,1.0,,https://www.greenstrealty.com/properties/profile/56-1-2-e-green-st
+Green Street Realty,56-e-green-1,2026-11-11,56 E Green 1,820.0,820.0,4100.0,4100.0,5,,2.0,2.0,,https://www.greenstrealty.com/properties/profile/56-e-green-1
+Green Street Realty,56-e-healey-st,2026-11-11,56 E Healey St,,,875.0,995.0,1,1,1.0,1.0,,https://www.greenstrealty.com/properties/profile/56-e-healey-st
+Green Street Realty,57-e-john-st,2026-11-11,57 E John St,713.0,713.0,1050.0,1425.0,2,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/57-e-john-st
+Green Street Realty,58-e-healey-st,2026-11-11,58 E Healey St,,,875.0,950.0,1,1,1.0,1.0,,https://www.greenstrealty.com/properties/profile/58-e-healey-st
+Green Street Realty,601-s-busey,2026-11-11,601 S Busey,820.0,820.0,4100.0,4100.0,5,,5.0,5.0,,https://www.greenstrealty.com/properties/profile/601-s-busey
+Green Street Realty,603-breen,2026-11-11,603 Breen,,,1350.0,1350.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/603-breen
+Green Street Realty,604-s-neil-st,2026-11-11,604 S Neil St,798.0,798.0,1295.0,1595.0,1,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/604-s-neil-st
+Green Street Realty,605-s-elm-st,2026-11-11,605 S Elm St,370.0,370.0,1850.0,1850.0,5,,2.0,2.0,,https://www.greenstrealty.com/properties/profile/605-s-elm-st
+Green Street Realty,606-breen,2026-11-11,606 Breen,517.0,517.0,1550.0,1550.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/606-breen
+Green Street Realty,606-richards-ln,2026-11-11,606 Richards Ln,,,1375.0,1375.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/606-richards-ln
+Green Street Realty,607-breen-dr,2026-11-11,607 Breen Dr,583.0,583.0,1750.0,1750.0,3,3,2.5,2.5,,https://www.greenstrealty.com/properties/profile/607-breen-dr
+Green Street Realty,607-s-elm-st,2026-11-11,607 S Elm St,467.0,467.0,1400.0,1400.0,3,3,1.5,1.5,,https://www.greenstrealty.com/properties/profile/607-s-elm-st
+Green Street Realty,608-breen-dr,2026-11-11,608 Breen Dr,575.0,575.0,1725.0,1725.0,3,3,2.5,2.5,,https://www.greenstrealty.com/properties/profile/608-breen-dr
+Green Street Realty,608-s-state-st,2026-11-11,608 S State St,575.0,575.0,995.0,1150.0,1,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/608-s-state-st
+Green Street Realty,611-breen,2026-11-11,611 Breen,,,1400.0,1400.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/611-breen
+Green Street Realty,612-breen-dr,2026-11-11,612 Breen Dr,517.0,517.0,1550.0,1550.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/612-breen-dr
+Green Street Realty,617-richards,2026-11-11,617 Richards,,,1400.0,1400.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/617-richards
+Green Street Realty,619-s-wright-st,2026-11-11,619 S Wright St,800.0,1025.0,2050.0,2800.0,1,3,1.0,2.0,,https://www.greenstrealty.com/properties/profile/619-s-wright-st
+Green Street Realty,701-w-elm-st,2026-11-11,701 W Elm St,500.0,663.0,1325.0,1500.0,2,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/701-w-elm-st
+Green Street Realty,702-s-prairie-st,2026-11-11,702 S Prairie St,467.0,467.0,1400.0,1400.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/702-s-prairie-st
+Green Street Realty,702-w-elm-st,2026-11-11,702 W Elm St,638.0,638.0,1275.0,1275.0,2,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/702-w-elm-st
+Green Street Realty,704-w-elm-st,2026-11-11,704 W Elm St,638.0,638.0,1275.0,1275.0,2,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/704-w-elm-st
+Green Street Realty,705-e-colorado-ave,2026-11-11,705 E Colorado Ave,467.0,1100.0,950.0,1400.0,1,3,1.0,2.0,Now,https://www.greenstrealty.com/properties/profile/705-e-colorado-ave
+Green Street Realty,706-breen-dr,2026-11-11,706 Breen Dr,508.0,508.0,1525.0,1525.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/706-breen-dr
+Green Street Realty,706-s-locust-st,2026-11-11,706 S Locust St,613.0,613.0,700.0,1225.0,2,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/706-s-locust-st
+Green Street Realty,708-w-illinois,2026-11-11,708 W Illinois,700.0,700.0,2800.0,2800.0,4,4,2.0,2.0,,https://www.greenstrealty.com/properties/profile/708-w-illinois
+Green Street Realty,709-s-state-st,2026-11-11,709 S State St,400.0,400.0,2000.0,2000.0,5,,2.0,2.0,,https://www.greenstrealty.com/properties/profile/709-s-state-st
+Green Street Realty,709-w-green-st,2026-11-11,709 W Green St,575.0,713.0,1425.0,2300.0,2,4,1.0,2.0,,https://www.greenstrealty.com/properties/profile/709-w-green-st
+Green Street Realty,710-richards-ln,2026-11-11,710 Richards Ln,517.0,517.0,1550.0,1550.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/710-richards-ln
+Green Street Realty,712-w-elm-st,2026-11-11,712 W Elm St,600.0,795.0,795.0,1200.0,2,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/712-w-elm-st
+Green Street Realty,712-w-green-st,2026-11-11,712 W Green St,713.0,725.0,1425.0,1450.0,2,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/712-w-green-st
+Green Street Realty,713-s-sixth-st,2026-11-11,713 S Sixth St,,,950.0,950.0,1,1,1.0,1.0,,https://www.greenstrealty.com/properties/profile/713-s-sixth-st
+Green Street Realty,714-w-elm-st,2026-11-11,714 W Elm St,600.0,600.0,925.0,1200.0,1,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/714-w-elm-st
+Green Street Realty,715-balboa-dr,2026-11-11,715 Balboa Dr,458.0,458.0,1375.0,1375.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/715-balboa-dr
+Green Street Realty,715-breen-dr,2026-11-11,715 Breen Dr,458.0,458.0,1375.0,1375.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/715-breen-dr
+Green Street Realty,717-balboa-dr,2026-11-11,717 Balboa Dr,542.0,542.0,1625.0,1625.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/717-balboa-dr
+Green Street Realty,717-breen-dr,2026-11-11,717 Breen Dr,,,1350.0,1350.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/717-breen-dr
+Green Street Realty,721-s-prairie-st,2026-11-11,721 S Prairie St,517.0,517.0,1550.0,1550.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/721-s-prairie-st
+Green Street Realty,801-breen-dr,2026-11-11,801 Breen Dr,542.0,542.0,1625.0,1625.0,3,3,1.5,1.5,,https://www.greenstrealty.com/properties/profile/801-breen-dr
+Green Street Realty,801-s-state-st,2026-11-11,801 S State St,483.0,483.0,1450.0,1450.0,3,3,2.0,2.0,,https://www.greenstrealty.com/properties/profile/801-s-state-st
+Green Street Realty,803-breen-dr,2026-11-11,803 Breen Dr,533.0,533.0,1600.0,1600.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/803-breen-dr
+Green Street Realty,803-w-green-st,2026-11-11,803 W Green St,625.0,625.0,1250.0,1250.0,2,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/803-w-green-st
+Green Street Realty,804-s-westlawn-ave,2026-11-11,804 S Westlawn Ave,542.0,542.0,1625.0,1625.0,3,3,1.5,1.5,,https://www.greenstrealty.com/properties/profile/804-s-westlawn-ave
+Green Street Realty,805-richards-ln,2026-11-11,805 Richards Ln,525.0,525.0,1575.0,1575.0,3,3,1.5,1.5,,https://www.greenstrealty.com/properties/profile/805-richards-ln
+Green Street Realty,805-s-fourth-st,2026-11-11,805 S Fourth St,850.0,850.0,850.0,1700.0,2,2,1.0,1.5,,https://www.greenstrealty.com/properties/profile/805-s-fourth-st
+Green Street Realty,806-breen-dr,2026-11-11,806 Breen Dr,517.0,517.0,1550.0,1550.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/806-breen-dr
+Green Street Realty,806-w-green-st,2026-11-11,806 W Green St,663.0,700.0,1325.0,1400.0,2,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/806-w-green-st
+Green Street Realty,807-w-oregon-st,2026-11-11,807 W Oregon St,583.0,725.0,1450.0,1800.0,2,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/807-w-oregon-st
+Green Street Realty,808-breen-dr,2026-11-11,808 Breen Dr,458.0,458.0,1375.0,1375.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/808-breen-dr
+Green Street Realty,808-s-oak-st,2026-11-11,808 S Oak St,500.0,625.0,1250.0,2100.0,2,4,1.0,2.0,,https://www.greenstrealty.com/properties/profile/808-s-oak-st
+Green Street Realty,808-w-illinois,2026-11-11,808 W Illinois,600.0,725.0,950.0,1800.0,1,3,1.0,2.0,,https://www.greenstrealty.com/properties/profile/808-w-illinois
+Green Street Realty,810-s-oak-st,2026-11-11,810 S Oak St,400.0,663.0,1125.0,1600.0,2,4,1.0,1.0,,https://www.greenstrealty.com/properties/profile/810-s-oak-st
+Green Street Realty,810-s-prairie-st,2026-11-11,810 S Prairie St,425.0,425.0,1700.0,1700.0,4,4,1.5,1.5,,https://www.greenstrealty.com/properties/profile/810-s-prairie-st
+Green Street Realty,810-w-iowa-st,2026-11-11,810 W Iowa St,675.0,700.0,1350.0,1400.0,2,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/810-w-iowa-st
+Green Street Realty,811-w-oregon-st,2026-11-11,811 W Oregon St,475.0,600.0,1800.0,1900.0,3,4,1.0,2.0,,https://www.greenstrealty.com/properties/profile/811-w-oregon-st
+Green Street Realty,813-balboa-dr,2026-11-11,813 Balboa Dr,525.0,525.0,1575.0,1575.0,3,3,1.0,1.0,,https://www.greenstrealty.com/properties/profile/813-balboa-dr
+Green Street Realty,903-s-fourth-st,2026-11-11,903 S Fourth St,725.0,800.0,1450.0,1600.0,2,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/903-s-fourth-st
+Green Street Realty,903-w-oregon-st,2026-11-11,903 W Oregon St,698.0,698.0,1395.0,1395.0,2,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/903-w-oregon-st
+Green Street Realty,904-n-broadway-ave,2026-11-11,904 N Broadway Ave,498.0,850.0,850.0,995.0,1,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/904-n-broadway-ave
+Green Street Realty,905-s-locust-st,2026-11-11,905 S Locust St,700.0,725.0,1400.0,1450.0,2,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/905-s-locust-st
+Green Street Realty,906-s-oak-st,2026-11-11,906 S Oak St,450.0,700.0,1400.0,1800.0,2,4,1.0,1.0,,https://www.greenstrealty.com/properties/profile/906-s-oak-st
+Green Street Realty,908-s-first-st,2026-11-11,908 S First St,800.0,1125.0,1400.0,3950.0,4,4,1.0,4.0,Now,https://www.greenstrealty.com/properties/profile/908-s-first-st
+Green Street Realty,909-s-third-st,2026-11-11,909 S Third St,617.0,700.0,1850.0,3100.0,5,,1.0,2.0,,https://www.greenstrealty.com/properties/profile/909-s-third-st
+Green Street Realty,911-s-locust-st,2026-11-11,911 S Locust St,,,900.0,1250.0,1,1,1.0,1.0,Now,https://www.greenstrealty.com/properties/profile/911-s-locust-st
+Green Street Realty,913-s,2026-11-11,913 S,667.0,667.0,2000.0,2000.0,3,3,1.0,1.5,,https://www.greenstrealty.com/properties/profile/913-s
+Green Street Realty,colony-west,2026-11-11,Colony West,575.0,713.0,1150.0,1425.0,2,2,1.0,2.0,,https://www.greenstrealty.com/properties/profile/colony-west
+Green Street Realty,twin-oaks,2026-11-11,Twin Oaks,850.0,850.0,850.0,850.0,1,1,1.0,1.0,Now,https://www.greenstrealty.com/properties/profile/twin-oaks
+Green Street Realty,windsor-duplexes,2026-11-11,Windsor Duplexes,575.0,600.0,1150.0,1200.0,2,2,1.0,1.0,,https://www.greenstrealty.com/properties/profile/windsor-duplexes
