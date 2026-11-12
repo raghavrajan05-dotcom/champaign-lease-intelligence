@@ -1,0 +1,13 @@
+manager,external_id,scraped_on,name,beds,baths,rent_per_bed_min,rent_per_bed_max,rent_unit,status,available,url,price_basis,fees_per_bed,listed_price
+Seven07,1BR/1BA,2026-11-12,707 S 4th St - Seven07 (1BR/1BA),1,1.0,2025.0,2025.0,,Sold out,,https://liveseven07.com/floor-plans/,Whole-unit rent (studio / 1 bed),,2025.0
+Seven07,2BR/2BA - Type 3,2026-11-12,707 S 4th St - Seven07 (2BR/2BA - Type 3),2,2.0,,,,Sold out,,https://liveseven07.com/floor-plans/,Not shown: manager doesn't say if per person or per unit,,1409.0
+Seven07,4BR/2BA,2026-11-12,707 S 4th St - Seven07 (4BR/2BA),4,2.0,,,,Sold out,,https://liveseven07.com/floor-plans/,Not shown: manager doesn't say if per person or per unit,,1099.0
+Seven07,4BR/4BA - Type 2,2026-11-12,707 S 4th St - Seven07 (4BR/4BA - Type 2),4,4.0,,,,Last unit,,https://liveseven07.com/floor-plans/,Not shown: manager doesn't say if per person or per unit,,1215.0
+Seven07,2BR/2BA - Type 1,2026-11-12,707 S 4th St - Seven07 (2BR/2BA - Type 1),2,2.0,,,,Sold out,,https://liveseven07.com/floor-plans/,Not shown: manager doesn't say if per person or per unit,,1360.0
+Seven07,Studio - Type 2,2026-11-12,707 S 4th St - Seven07 (Studio - Type 2),0,1.0,1720.0,1720.0,,Sold out,,https://liveseven07.com/floor-plans/,Whole-unit rent (studio / 1 bed),,1720.0
+Seven07,2BR/2BA - Type 4,2026-11-12,707 S 4th St - Seven07 (2BR/2BA - Type 4),2,2.0,,,,Available,,https://liveseven07.com/floor-plans/,Not shown: manager doesn't say if per person or per unit,,1439.0
+Seven07,4BR/4BA - Type 3,2026-11-12,707 S 4th St - Seven07 (4BR/4BA - Type 3),4,4.0,,,,Sold out,,https://liveseven07.com/floor-plans/,Not shown: manager doesn't say if per person or per unit,,1205.0
+Seven07,2BR/2BA - Type 2,2026-11-12,707 S 4th St - Seven07 (2BR/2BA - Type 2),2,2.0,,,,Last unit,,https://liveseven07.com/floor-plans/,Not shown: manager doesn't say if per person or per unit,,1360.0
+Seven07,Studio - Type 1,2026-11-12,707 S 4th St - Seven07 (Studio - Type 1),0,1.0,1990.0,1990.0,,Sold out,,https://liveseven07.com/floor-plans/,Whole-unit rent (studio / 1 bed),,1990.0
+Seven07,3BR/3BA,2026-11-12,707 S 4th St - Seven07 (3BR/3BA),3,3.0,,,,Sold out,,https://liveseven07.com/floor-plans/,Not shown: manager doesn't say if per person or per unit,,1399.0
+Seven07,4BR/4BA - Type 1,2026-11-12,707 S 4th St - Seven07 (4BR/4BA - Type 1),4,4.0,,,,Available,,https://liveseven07.com/floor-plans/,Not shown: manager doesn't say if per person or per unit,,1250.0
