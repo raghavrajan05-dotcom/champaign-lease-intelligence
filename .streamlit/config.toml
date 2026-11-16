@@ -1,9 +1,9 @@
 [theme]
 base = "light"
-primaryColor = "#E84A27"            # Illinois orange
-backgroundColor = "#FFFFFF"
-secondaryBackgroundColor = "#F3F5F9"
-textColor = "#13294B"               # Illini blue
+primaryColor = "#C2410C"            # burnt orange accent
+backgroundColor = "#FBFAF7"         # warm off-white
+secondaryBackgroundColor = "#F1EEE8"
+textColor = "#1F2A37"
 font = "sans serif"
 
 [client]

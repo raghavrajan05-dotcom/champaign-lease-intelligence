@@ -7,6 +7,7 @@ Hosted on Streamlit Community Cloud; reads the daily data from the repo's "data"
 import sys
 from html import escape
 from pathlib import Path
+from urllib.parse import quote
 
 import altair as alt
 import pandas as pd
@@ -17,14 +18,14 @@ import streamlit as st
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.geo.geocode import attach_distance, load_cache, load_remote_cache  # noqa: E402
 from src.geo.landmarks import (  # noqa: E402
-    BIKE_MPH, DETOUR, WALK_MPH, load_landmarks, miles_to, minutes,
+    BIKE_MPH, DETOUR, WALK_MPH, area_for, load_landmarks, miles_to, minutes,
 )
 from src.normalize import (  # noqa: E402
     OPEN_STATUSES, REMOTE_BASE, REPO, load_all, load_history, load_history_remote,
     load_latest_remote,
 )
 
-st.set_page_config(page_title="Champaign Lease Intelligence", page_icon="🏠", layout="wide")
+st.set_page_config(page_title="Champaign Lease Intelligence", page_icon="📍", layout="wide")
 
 LISTING_TYPE = {
     "Green Street Realty": "Whole building (price range)",
@@ -48,14 +49,15 @@ MANAGER_COLORS = {
     "Seven07": "#0F766E",
     "The Rive": "#C2410C",
 }
-STATUS_STYLE = {  # badge colors; anything not open is greyed out on the cards
-    "Last unit": "#E84A27", "Leased": "#64748B", "Sold out": "#64748B",
-    "Unavailable": "#64748B", "No longer listed": "#94A3B8",
+STATUS_STYLE = {  # small tags; anything not open is greyed out in the list
+    "Last unit": "#C2410C", "Leased": "#6B7280", "Sold out": "#6B7280",
+    "Unavailable": "#6B7280", "No longer listed": "#9CA3AF",
 }
 FALLBACK_COLORS = ["#0891B2", "#65A30D", "#B45309", "#7C3AED", "#BE123C"]
 BED_OPTIONS = ["Studio", "1", "2", "3", "4", "5+"]
 DISTANCE_OPTIONS = [0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0, "Any"]
-CARDS_PER_PAGE = 24
+ROWS_PER_PAGE = 40
+STALE_DAYS = 2  # a source this many days behind the newest scrape gets a "last checked" note
 
 
 # ---------------------------------------------------------------- data
@@ -111,22 +113,58 @@ def price_label(lo, hi) -> str:
     return f"${lo:,.0f}" if pd.isna(hi) or hi == lo else f"${lo:,.0f}–${hi:,.0f}"
 
 
-def price_html(r) -> str:
-    """Price line, how it was worked out, and any required monthly fees."""
+def report_link(r) -> str:
+    """Pre-filled GitHub issue so anyone can flag a wrong price or listing."""
+    title = quote(f"Wrong info: {r.name} ({r.manager})")
+    body = quote(f"Listing: {r.url}\nShown on the site: {price_label(r.rent_per_bed_min, r.rent_per_bed_max)}"
+                 f" per bed\n\nWhat's wrong:\n")
+    return f"https://github.com/{REPO}/issues/new?title={title}&body={body}"
+
+
+def listing_row(r, lm) -> str:
+    """One listing as a row: address + details | price | walk time | links."""
     basis = "" if pd.isna(r.price_basis) else escape(str(r.price_basis))
-    if pd.isna(r.rent_per_bed_min):
-        if pd.notna(r.listed_price):
-            return (f'<div class="price listed">Listed ${r.listed_price:,.0f}</div>'
-                    f'<div class="basis warn">{basis}. Ask the manager.</div>')
-        return '<div class="price listed">Price not listed</div>'
-    html = (f'<div class="price">{price_label(r.rent_per_bed_min, r.rent_per_bed_max)} '
-            f'<small>/ bed / month</small></div>')
-    if pd.notna(r.fees_per_bed) and r.fees_per_bed > 0:
-        html += (f'<div class="fees">+ ${r.fees_per_bed:,.0f} required monthly fees per person '
-                 f'(≈ ${r.rent_per_bed_min + r.fees_per_bed:,.0f} total)</div>')
-    if basis:
-        html += f'<div class="basis{" warn" if "Estimate" in basis or "assumed" in basis else ""}">{basis}</div>'
-    return html
+    warn = " warn" if basis and ("Estimate" in basis or "assumed" in basis
+                                 or "Not shown" in basis) else ""
+    tag = ""
+    if r.status in STATUS_STYLE:
+        tag = (f'<span class="tag-pill" style="background:{STATUS_STYLE[r.status]}">'
+               f'{escape(r.status)}</span>')
+    details = " · ".join(x for x in [
+        None if pd.isna(r.area) else escape(r.area), beds_label(r.beds_min, r.beds_max),
+        escape(r.manager), None if pd.isna(r.available) else escape(str(r.available))] if x)
+
+    if pd.notna(r.rent_per_bed_min):
+        price = (f'<div class="amt">{price_label(r.rent_per_bed_min, r.rent_per_bed_max)}'
+                 f'<span> /bed/mo</span></div>')
+        if pd.notna(r.fees_per_bed) and r.fees_per_bed > 0:
+            price += (f'<div class="fee">+ ${r.fees_per_bed:,.0f} fees ≈ '
+                      f'${r.rent_per_bed_min + r.fees_per_bed:,.0f}</div>')
+    elif pd.notna(r.listed_price):
+        price = f'<div class="amt listed">Listed ${r.listed_price:,.0f}</div>'
+    else:
+        price = '<div class="amt listed">No price listed</div>'
+
+    if pd.isna(r.miles):
+        walk = '<div class="lbl">location unknown</div>'
+    elif r.walk_min <= 30:
+        walk = (f'<div class="mins">{r.walk_min:.0f} min</div>'
+                f'<div class="lbl">walk to {escape(lm["short"])}</div>')
+    else:
+        walk = (f'<div class="mins">{r.bike_min:.0f} min</div>'
+                f'<div class="lbl">bike to {escape(lm["short"])}</div>')
+
+    return (f'<div class="row{"" if r.is_open else " closed"}">'
+            f'<div class="main"><a class="addr" href="{escape(str(r.url))}" target="_blank" '
+            f'rel="noopener">{escape(str(r.name))}</a>{tag}'
+            f'<div class="sub">{details}</div>'
+            + (f'<div class="basis{warn}">{basis}</div>' if basis else "")
+            + (f'<div class="basis warn">Price last checked {r.checked_on}</div>'
+               if r.days_behind >= STALE_DAYS else "")
+            + f'</div><div>{price}</div><div>{walk}</div>'
+            f'<div class="links"><a href="{escape(str(r.url))}" target="_blank" rel="noopener">'
+            f'Listing ↗</a><br><a class="report" href="{escape(report_link(r))}" '
+            f'target="_blank" rel="noopener">Report a problem</a></div></div>')
 
 
 def matches_beds(lo, hi, chosen: set[int]) -> bool:
@@ -144,47 +182,44 @@ landmarks = load_landmarks()
 
 st.markdown("""
 <style>
-.block-container {padding-top: 2.2rem; max-width: 1250px;}
-.hero {background: linear-gradient(120deg, #13294B 0%, #1E3A6E 60%, #E84A27 160%);
-  color: #fff; border-radius: 18px; padding: 28px 32px 24px; margin-bottom: 18px;}
-.hero .eyebrow {font-size: .78rem; letter-spacing: .12em; text-transform: uppercase;
-  opacity: .8; font-weight: 600;}
-.hero h1 {color: #fff; font-size: 2.3rem; line-height: 1.15; margin: 6px 0 8px; padding: 0;}
-.hero p {color: #DCE3F0; font-size: 1.02rem; margin: 0; max-width: 760px;}
-.hero .updated {margin-top: 14px; font-size: .8rem; color: #B9C5DA;}
-.kpi {background: #F3F5F9; border-radius: 14px; padding: 14px 18px; height: 100%;}
-.kpi .label {font-size: .78rem; color: #5B6B85; text-transform: uppercase; letter-spacing: .06em;
-  font-weight: 600;}
-.kpi .value {font-size: 1.75rem; font-weight: 700; color: #13294B; margin-top: 2px;}
-.kpi .sub {font-size: .8rem; color: #5B6B85;}
-.cards {display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px;}
-a.card {display: block; text-decoration: none !important; color: #13294B !important;
-  border: 1px solid #E3E8F0; border-radius: 14px; padding: 14px 16px 12px; background: #fff;
-  transition: box-shadow .15s, transform .15s, border-color .15s;}
-a.card:hover {box-shadow: 0 8px 24px rgba(19,41,75,.12); transform: translateY(-2px);
-  border-color: #C9D3E3;}
-.card .top {display: flex; justify-content: space-between; align-items: center; gap: 8px;}
-.badge {font-size: .7rem; font-weight: 700; padding: 3px 8px; border-radius: 999px; color: #fff;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 62%;}
-.dist {font-size: .76rem; color: #5B6B85; white-space: nowrap;}
-.card .name {font-weight: 650; font-size: 1rem; margin: 10px 0 2px; line-height: 1.3;
-  min-height: 2.6em;}
-.card .price {font-size: 1.45rem; font-weight: 750; color: #E84A27;}
-.card .price small {font-size: .78rem; color: #5B6B85; font-weight: 500;}
-.card .meta {font-size: .8rem; color: #5B6B85; margin-top: 4px;}
-a.card.closed {background: #F6F7F9; opacity: .72;}
-a.card.closed .price {color: #64748B; text-decoration: line-through;}
-.status {float: right; color: #fff; font-weight: 700; padding: 2px 8px; border-radius: 999px;
-  text-transform: none; letter-spacing: 0;}
-.card .price.listed {font-size: 1.05rem; color: #5B6B85;}
-.card .fees {font-size: .78rem; color: #13294B; margin-top: 2px;}
-.card .basis {font-size: .72rem; color: #5B6B85; margin-top: 2px;}
-.card .basis.warn {color: #B45309;}
-.card .kind {font-size: .7rem; color: #8090A8; margin-top: 6px; text-transform: uppercase;
-  letter-spacing: .05em;}
-.legend {display: flex; gap: 14px; flex-wrap: wrap; font-size: .8rem; color: #5B6B85;}
-.legend span::before {content: ""; display: inline-block; width: 10px; height: 10px;
-  border-radius: 50%; margin-right: 5px; background: var(--c);}
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&display=swap');
+.block-container {padding-top: 1.6rem; max-width: 1180px;}
+.masthead {display: flex; gap: 14px; align-items: center; margin-bottom: 4px;}
+.masthead .title {font-family: 'Fraunces', Georgia, serif; font-size: 2rem; line-height: 1.1;
+  color: #1F2A37;}
+.masthead .tag {color: #4B5563; font-size: 1rem; margin-top: 2px;}
+.statusline {color: #6B7280; font-size: .82rem; margin: 8px 0 14px; padding-bottom: 12px;
+  border-bottom: 1px solid #E7E2D9;}
+.row {display: grid; grid-template-columns: minmax(0, 1fr) 170px 120px 130px; gap: 18px;
+  align-items: center; padding: 14px 4px; border-bottom: 1px solid #ECE7DF;}
+.row:hover {background: #F6F3EE;}
+.row .addr {font-weight: 600; font-size: 1rem; color: #1F2A37 !important;
+  text-decoration: none !important;}
+.row .addr:hover {text-decoration: underline !important;}
+.row .sub {color: #4B5563; font-size: .85rem; margin-top: 2px;}
+.row .basis {color: #6B7280; font-size: .75rem; margin-top: 2px;}
+.row .basis.warn {color: #B45309;}
+.row .amt {font-size: 1.25rem; font-weight: 700; color: #1F2A37;}
+.row .amt span {font-size: .8rem; font-weight: 400; color: #6B7280;}
+.row .amt.listed {font-size: 1rem; color: #6B7280; font-weight: 600;}
+.row .fee {font-size: .76rem; color: #4B5563;}
+.row .mins {font-size: 1.05rem; font-weight: 600; color: #1F2A37;}
+.row .lbl {font-size: .75rem; color: #6B7280;}
+.row .links {font-size: .8rem; text-align: right; line-height: 1.7;}
+.row .links a {color: #C2410C !important; text-decoration: none !important;}
+.row .links a.report {color: #6B7280 !important;}
+.row.closed .addr, .row.closed .amt {color: #9CA3AF !important;}
+.row.closed .amt {text-decoration: line-through;}
+.tag-pill {display: inline-block; font-size: .7rem; font-weight: 600; padding: 1px 7px;
+  border-radius: 4px; margin-left: 6px; vertical-align: 1px; color: #fff;}
+@media (max-width: 760px) {
+  .block-container {padding-top: 3.2rem;}
+  .masthead .title {font-size: 1.5rem;}
+  .masthead svg {width: 30px; height: 30px; flex: none;}
+  .row {grid-template-columns: 1fr 1fr; gap: 6px 12px;}
+  .row .main {grid-column: 1 / -1;}
+  .row .links {grid-column: 1 / -1; text-align: left;}
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -196,6 +231,11 @@ managers = sorted(df["manager"].unique())
 df["listing_type"] = df["manager"].map(LISTING_TYPE).fillna(DEFAULT_TYPE)
 df["status"] = df["status"].fillna("Available")
 df["is_open"] = df["status"].isin(OPEN_STATUSES)
+# How far behind each source is: a scraper that stopped shouldn't pass off old prices as today's.
+_day = pd.to_datetime(df["scraped_on"])
+_source_day = _day.groupby(df["manager"]).transform("max")
+df["days_behind"] = (_day.max() - _source_day).dt.days
+df["checked_on"] = _source_day.dt.strftime("%b %-d")
 
 # ---------------------------------------------------------------- sidebar
 
@@ -208,13 +248,13 @@ with st.sidebar:
         format_func=lambda v: v if v == "Any" else f"{v} mi",
     )
 
-    st.markdown("### Budget & size")
+    st.markdown("### Budget and size")
     priced = df["rent_per_bed_min"].dropna()
     lo, hi = int(priced.min() // 25 * 25), int(-(-priced.max() // 25) * 25)
     price_range = st.slider("Rent per bed ($/month)", lo, hi, (lo, hi), step=25)
     beds = st.pills("Bedrooms", BED_OPTIONS, selection_mode="multi", default=BED_OPTIONS)
 
-    st.markdown("### Narrow it down")
+    st.markdown("### More filters")
     query = st.text_input("Street or building", placeholder="e.g. Green, Armory, Sixth")
     chosen_managers = st.multiselect("Property managers", managers, default=managers)
     show_closed = st.toggle("Show leased & sold-out listings", value=True,
@@ -227,6 +267,7 @@ with st.sidebar:
 
 # ---------------------------------------------------------------- filter
 
+df["area"] = [area_for(a, b) for a, b in zip(df["lat"], df["lon"])]
 df["miles"] = miles_to(df, lm["lat"], lm["lon"])
 df["walk_min"] = minutes(df["miles"], WALK_MPH)
 df["bike_min"] = minutes(df["miles"], BIKE_MPH)
@@ -252,52 +293,35 @@ sort_cols = {"Lowest price": (["rent_per_bed_min", "miles"], [True, True]),
 view = view.sort_values(["is_open"] + sort_cols[0], ascending=[False] + sort_cols[1],
                         na_position="last")
 
-# ---------------------------------------------------------------- hero + KPIs
+# ---------------------------------------------------------------- header
 
+MARK = ('<svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">'
+        '<path d="M20 3c-7 0-12.5 5.4-12.5 12.3C7.5 24.5 20 37 20 37s12.5-12.5 12.5-21.7C32.5 '
+        '8.4 27 3 20 3z" fill="#C2410C"/><path d="M13.5 18.5 20 12.8l6.5 5.7v6.2h-4.2v-4h-4.6v4'
+        'h-4.2z" fill="#FBFAF7"/></svg>')
 updated = df["scraped_on"].max()
+behind = (df[df["days_behind"] >= STALE_DAYS].groupby("manager")["checked_on"].first())
+stale_note = "".join(f" · {escape(m)} last checked {d}" for m, d in behind.items())
 st.markdown(
-    f"""<div class="hero"><div class="eyebrow">UIUC off-campus housing · updated daily</div>
-<h1>Find your Champaign lease</h1>
-<p>{int(df["is_open"].sum()):,} open listings from {len(managers)} property managers and
-buildings, priced per bed, with distance to the places you actually go. Pick a spot on the
-left to re-measure everything.</p>
-<div class="updated">Last updated {escape(str(updated))} · data refreshes every morning ·
-prices are base rent; required monthly fees are added where the manager states them</div></div>""",
+    f'<div class="masthead">{MARK}<div><div class="title">Champaign Lease Intelligence</div>'
+    '<div class="tag">Off-campus apartments near UIUC, priced per bed and checked every '
+    'morning.</div></div></div>'
+    f'<div class="statusline">{int(df["is_open"].sum()):,} open listings from '
+    f'{len(managers)} managers and buildings · updated {escape(str(updated))} · '
+    'prices are base rent, plus required fees where the manager lists them · '
+    f'not affiliated with the University of Illinois{stale_note}</div>',
     unsafe_allow_html=True,
 )
-
-
-def kpi(col, label: str, value: str, sub: str) -> None:
-    col.markdown(f'<div class="kpi"><div class="label">{label}</div>'
-                 f'<div class="value">{value}</div><div class="sub">{sub}</div></div>',
-                 unsafe_allow_html=True)
-
-
-open_df = df[df["is_open"]]
-vp = view[view["is_open"]].dropna(subset=["rent_per_bed_min"])
-near = open_df[(open_df["miles"] <= 0.5) & open_df["rent_per_bed_min"].notna()]
-close_1mi = open_df[(open_df["miles"] <= 1.0) & open_df["rent_per_bed_min"].notna()]
-k1, k2, k3, k4 = st.columns(4)
-kpi(k1, "Open & matching your filters", f"{int(view['is_open'].sum()):,}",
-    f"{int((~view['is_open']).sum()):,} more leased or sold out")
-kpi(k2, "Median rent / bed", f"${vp['rent_per_bed_min'].median():,.0f}" if len(vp) else "–",
-    "lowest listed price, matching listings")
-kpi(k3, f"Within ½ mile of {escape(lm['short'])}", f"{len(near):,}",
-    f"about a {int(0.5 * DETOUR / WALK_MPH * 60)}-minute walk or less")
-kpi(k4, f"Cheapest within 1 mi of {escape(lm['short'])}",
-    f"${close_1mi['rent_per_bed_min'].min():,.0f}" if len(close_1mi) else "–", "per bed per month")
-st.write("")
 
 # ---------------------------------------------------------------- tabs
 
 t_list, t_map, t_market, t_trends, t_about = st.tabs(
-    [":material/home: Listings", ":material/map: Map", ":material/bar_chart: Market",
-     ":material/trending_up: Trends", ":material/info: About"])
+    ["Listings", "Map", "Prices", "Trends", "About"])
 
 with t_list:
     left, right = st.columns([3, 1])
     left.markdown(f"**{int(view['is_open'].sum()):,} open listings** · sorted by {sort_by.lower()}"
-                  + (f" · then {int((~view['is_open']).sum()):,} leased / sold out"
+                  + (f" · then {int((~view['is_open']).sum()):,} leased or sold out"
                      if (~view["is_open"]).any() else ""))
     as_table = right.toggle("Table view", value=False)
     if view.empty:
@@ -306,11 +330,11 @@ with t_list:
         st.dataframe(
             view.assign(beds=[beds_label(a, b) for a, b in zip(view["beds_min"], view["beds_max"])]),
             hide_index=True, use_container_width=True, height=560,
-            column_order=["name", "manager", "status", "rent_per_bed_min", "rent_per_bed_max",
-                          "fees_per_bed", "price_basis", "listed_price", "beds",
-                          "miles", "walk_min", "bike_min", "available", "listing_type", "url"],
+            column_order=["name", "area", "manager", "status", "rent_per_bed_min",
+                          "rent_per_bed_max", "fees_per_bed", "price_basis", "listed_price",
+                          "beds", "miles", "walk_min", "available", "url"],
             column_config={
-                "name": "Property", "manager": "Manager", "status": "Status",
+                "name": "Property", "area": "Area", "manager": "Manager", "status": "Status",
                 "rent_per_bed_min": st.column_config.NumberColumn("From $/bed", format="$%d"),
                 "rent_per_bed_max": st.column_config.NumberColumn("To $/bed", format="$%d"),
                 "fees_per_bed": st.column_config.NumberColumn("+ fees $/person", format="$%d"),
@@ -320,41 +344,18 @@ with t_list:
                 "beds": "Bedrooms",
                 "miles": st.column_config.NumberColumn(f"Miles to {lm['short']}", format="%.2f"),
                 "walk_min": st.column_config.NumberColumn("Walk (min, est.)", format="%d"),
-                "bike_min": st.column_config.NumberColumn("Bike (min, est.)", format="%d"),
-                "available": "Available", "listing_type": "Listing type",
+                "available": "Available",
                 "url": st.column_config.LinkColumn("Link", display_text="Open ↗"),
             },
         )
     else:
-        shown = st.session_state.get("cards_shown", CARDS_PER_PAGE)
-        cards = []
-        for r in view.head(shown).itertuples():
-            color = manager_color(r.manager, managers)
-            if pd.isna(r.miles):
-                dist = "location unknown"
-            elif r.walk_min <= 30:
-                dist = f"{r.miles:.2f} mi · ~{r.walk_min:.0f} min walk"
-            else:
-                dist = f"{r.miles:.2f} mi · ~{r.bike_min:.0f} min bike"
-            avail = "" if pd.isna(r.available) else f" · {escape(str(r.available))}"
-            status = ""
-            if r.status in STATUS_STYLE:
-                status = (f'<span class="status" style="background:{STATUS_STYLE[r.status]}">'
-                          f'{escape(r.status)}</span>')
-            cards.append(
-                f'<a class="card{"" if r.is_open else " closed"}" href="{escape(str(r.url))}" '
-                f'target="_blank" rel="noopener">'
-                f'<div class="top"><span class="badge" style="background:{color}">'
-                f'{escape(r.manager)}</span><span class="dist">{dist}</span></div>'
-                f'<div class="name">{escape(str(r.name))}</div>'
-                f'{price_html(r)}'
-                f'<div class="meta">{beds_label(r.beds_min, r.beds_max)}{avail}</div>'
-                f'<div class="kind">{escape(r.listing_type)}{status}</div></a>')
-        st.markdown('<div class="cards">' + "".join(cards) + "</div>", unsafe_allow_html=True)
+        shown = st.session_state.get("rows_shown", ROWS_PER_PAGE)
+        rows = [listing_row(r, lm) for r in view.head(shown).itertuples()]
+        st.markdown("".join(rows), unsafe_allow_html=True)
         if shown < len(view):
             st.write("")
             if st.button(f"Show more ({len(view) - shown:,} left)", use_container_width=True):
-                st.session_state["cards_shown"] = shown + CARDS_PER_PAGE
+                st.session_state["rows_shown"] = shown + ROWS_PER_PAGE
                 st.rerun()
 
 with t_map:
@@ -504,11 +505,18 @@ with t_trends:
 with t_about:
     a1, a2 = st.columns([3, 2])
     with a1:
+        # ABOUT_ME: Rod, rewrite this paragraph in your own words before launch.
         st.markdown(f"""
-#### What this is
-A free, student-built tracker of off-campus rentals near UIUC. Every morning it reads each
-property manager's public listings page, converts every price to **dollars per bed per month**,
-and measures straight-line distance to campus landmarks.
+#### Why this exists
+I'm Rod, a student at UIUC. Finding an apartment here means opening a dozen landlord sites
+that all price things differently: some per person, some per apartment, some with fees in
+the fine print. This site reads those listings every morning and puts them side by side: rent
+per bed, required fees when the landlord lists them, and how far each place is from where
+you actually spend your day.
+
+It's a student project, not a listing service. Always confirm price and availability with
+the landlord before you sign anything. If something looks wrong, use **Report a problem** on
+that listing and I'll fix it.
 
 #### How to read it
 - **Per-bed price, and how we got it.** Every listing says how its price was worked out:
@@ -521,6 +529,8 @@ and measures straight-line distance to campus landmarks.
   ask the manager.
 - **Whole building vs. unit.** Green Street Realty lists one price range per building; other
   managers list individual units or floor plans.
+- **Areas.** "Campustown", "Engineering campus" and so on are rough labels based on the
+  nearest neighborhood center, not official borders.
 - **Distance and walk time.** Straight-line miles. Walk/bike times assume streets add about
   {int((DETOUR - 1) * 100)}% to the distance, at {WALK_MPH:g} mph walking and {BIKE_MPH:g} mph biking:
   rough estimates, not directions.
@@ -531,8 +541,10 @@ and measures straight-line distance to campus landmarks.
   to the manager's own page.
 
 #### How it's built
-Python scrapers → data-quality checks → daily GitHub Actions run → public CSVs →
-this Streamlit site. Code: [github.com/{REPO}](https://github.com/{REPO})
+Python scrapers, data-quality checks and a daily GitHub Actions job feed this Streamlit site.
+The code is public: [github.com/{REPO}](https://github.com/{REPO})
+
+Not affiliated with or endorsed by the University of Illinois.
 """)
     with a2:
         st.markdown("#### Sources")
@@ -545,6 +557,6 @@ this Streamlit site. Code: [github.com/{REPO}](https://github.com/{REPO})
             "listing_type": "Listed as"})
         st.caption("Green Street Realty prices are used with their permission. "
                    "Landmark locations: Wikipedia, OpenStreetMap or the US Census geocoder.")
-        st.markdown("#### Spot a problem?")
-        st.markdown(f"[Open an issue on GitHub](https://github.com/{REPO}/issues) "
-                    "if a listing looks wrong or you want a building added.")
+        st.markdown("#### Missing a building?")
+        st.markdown(f"[Tell me here](https://github.com/{REPO}/issues/new?title="
+                    f"{quote('Please add: ')}) and I'll ask the landlord about adding it.")

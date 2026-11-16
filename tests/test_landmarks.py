@@ -22,3 +22,12 @@ def test_miles_and_minutes():
     miles = miles_to(df, 40.1075 + 1 / 69, -88.2272)  # 1/69 degree of latitude ~ 1 mile
     assert abs(miles[0] - 1.0) < 0.01 and pd.isna(miles[1])
     assert minutes(pd.Series([1.0]), 3.0)[0] == 26  # 1 mi x 1.3 detour at 3 mph
+
+
+def test_area_labels():
+    from src.geo.landmarks import area_for
+
+    assert area_for(40.1101, -88.2335) == "Campustown"          # Green & 5th
+    assert area_for(40.0900, -88.3000) == "Champaign, farther out"
+    assert area_for(40.1100, -88.1700) == "Urbana, farther out"
+    assert area_for(None, None) is None

@@ -62,3 +62,26 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+# Rough neighborhood centers, for a friendly "area" label on each listing (not exact borders).
+AREAS = {
+    "Campustown": (40.1101, -88.2330),        # Green St between 1st and Wright
+    "Engineering campus": (40.1130, -88.2270),  # north of Green, Wright to Goodwin
+    "South campus": (40.1030, -88.2350),      # Armory / ARC / Gregory
+    "Urbana near campus": (40.1090, -88.2180),  # east of Lincoln Ave
+    "Downtown Champaign": (40.1165, -88.2430),
+    "Downtown Urbana": (40.1110, -88.2075),
+}
+CAMPUS = (40.1075, -88.2272)  # Main Quad
+FAR_MILES = 1.75   # beyond this from the Quad, just say which city
+WRIGHT_ST_LON = -88.2290  # Champaign is west of Wright St, Urbana east
+
+
+def area_for(lat, lon) -> str | None:
+    """'Campustown', 'Urbana near campus', ... or 'Champaign, farther out'. None if unknown."""
+    if lat is None or lon is None or pd.isna(lat) or pd.isna(lon):
+        return None
+    if haversine_mi(lat, lon, *CAMPUS) > FAR_MILES:
+        return "Champaign, farther out" if lon < WRIGHT_ST_LON else "Urbana, farther out"
+    return min(AREAS, key=lambda a: haversine_mi(lat, lon, *AREAS[a]))
